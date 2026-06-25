@@ -1,0 +1,24 @@
+# Visual Studio
+.vs/
+
+# Carpetas de compilación
+bin/
+obj/
+
+# Archivos de usuario
+*.user
+*.suo
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# Archivos del sistema
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,60 @@
+body {
+    background: #fff8ed;
+    /*font-family: Segoe UI,Arial,sans-serif;*/
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.hero {
+    background: linear-gradient(135deg,#211103,#7a2900);
+    color: white;
+    border-radius: 28px;
+    padding: 48px;
+    box-shadow: 0 20px 40px #0002
+}
+
+.card {
+    border: 0;
+    border-radius: 20px;
+    box-shadow: 0 12px 28px #7a29001f
+}
+
+.stat {
+    background: white;
+    border-left: 8px solid #ffb000
+}
+
+.btn-primary {
+    background: #d35400;
+    border: 0
+}
+
+    .btn-primary:hover {
+        background: #a04000
+    }
+
+.food-img {
+    height: 170px;
+    object-fit: cover;
+    border-radius: 18px
+}
+
+.login-wrap {
+    min-height: 100vh;
+    background: linear-gradient(135deg,#2b1200,#f39c12);
+    display: flex;
+    align-items: center
+}
+
+.login-card {
+    max-width: 430px;
+    margin: auto;
+    background: white;
+    border-radius: 26px;
+    padding: 34px;
+    box-shadow: 0 22px 60px #0005
+}
+
+.badge-soft {
+    background: #fff0c2;
+    color: #6b3500
+}

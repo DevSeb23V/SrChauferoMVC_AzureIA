@@ -1,0 +1,56 @@
+@{
+    var items = ViewBag.Items as List<SrChauferoMVC_AzureIA.ViewModels.CarritoItemViewModel>;
+    int mesaPago = ViewBag.Mesa == null ? 0 : (int)ViewBag.Mesa;
+    decimal totalPago = ViewBag.Total == null ? 0 : (decimal)ViewBag.Total;
+    string tipoPedido = ViewBag.TipoPedido as string ?? "";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 p-4 text-center">
+            <h2 class="fw-bold text-success">✅ Pago simulado generado</h2>
+            <p class="text-muted">Escanea el QR para simular el pago del pedido.</p>
+
+            <div class="my-3 d-flex justify-content-center">
+                <div class="border rounded p-3 bg-white">
+                    @Html.Raw(ViewBag.QrSvg)
+                </div>
+            </div>
+
+            <h5>Código de pago:</h5>
+            <div class="alert alert-dark fw-bold">@ViewBag.CodigoPago</div>
+
+            <div class="row text-start mt-4">
+                <div class="col-md-4"><strong>Pedido:</strong> #@ViewBag.PedidoId</div>
+                <div class="col-md-4"><strong>Modalidad:</strong> @tipoPedido</div>
+                <div class="col-md-4"><strong>Total:</strong> S/ @totalPago.ToString("0.00")</div>
+                @if (tipoPedido == "Presencial")
+                {
+                    <div class="col-md-4 mt-2"><strong>Mesa:</strong> @mesaPago</div>
+                }
+            </div>
+
+            @if (items != null && items.Any())
+            {
+                <div class="text-start mt-4">
+                    <h5>Detalle del pedido</h5>
+                    <ul class="list-group">
+                        @foreach (var item in items)
+                        {
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>@item.Cantidad x @item.Nombre</span>
+                                <strong>S/ @item.Subtotal.ToString("0.00")</strong>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="alert alert-info mt-4 text-start">
+                <strong>Nota:</strong> Esta es una pasarela de pago simulada para fines académicos. No realiza cobros reales.
+            </div>
+
+            <a asp-controller="Mesas" asp-action="Index" class="btn btn-primary mt-2">Realizar otro pedido</a>
+        </div>
+    </div>
+</div>

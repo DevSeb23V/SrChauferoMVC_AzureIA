@@ -1,0 +1,83 @@
+@model List<Plato>
+@{
+    var rol = Context.Session.GetString("Rol");
+    var esUsuario = rol == "Usuario";
+    var tipoPedido = Context.Session.GetString("TipoPedido");
+    var mesaSeleccionada = Context.Session.GetInt32("MesaSeleccionada");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+        <h2 class="fw-bold">🍛 Carta de Platos</h2>
+        @if (esUsuario)
+        {
+            <p class="text-muted mb-0">Selecciona los platos y la cantidad que deseas pedir.</p>
+            @if (tipoPedido == "Presencial")
+            {
+                <span class="badge bg-success mt-2">Comer aquí | Mesa: @mesaSeleccionada</span>
+            }
+            else if (tipoPedido == "Para llevar")
+            {
+                <span class="badge bg-info text-dark mt-2">Pedido para llevar</span>
+            }
+        }
+    </div>
+
+    @if (rol == "Administrador")
+    {
+        <a class="btn btn-primary" asp-action="Create">Nuevo Plato</a>
+    }
+    else if (esUsuario)
+    {
+        <a class="btn btn-success" asp-controller="Cliente" asp-action="Pedido">Continuar con mi pedido</a>
+    }
+</div>
+
+<div class="row g-4">
+    @foreach (var plato in Model)
+    {
+        <div class="col-md-4">
+            <div class="card p-3 h-100 shadow-sm">
+                <img class="food-img mb-3" src="@plato.ImagenUrl" alt="@plato.Nombre" />
+
+                <h4>@plato.Nombre</h4>
+                <span class="badge badge-soft mb-2">@plato.Categoria</span>
+
+                <div class="row mt-3 align-items-end">
+                    <div class="col-6">
+                        <h5>S/ @plato.Precio.ToString("0.00")</h5>
+                        <p class="mb-0 pt-2">@(plato.Disponible ? "Disponible" : "No disponible")</p>
+                    </div>
+
+                    <div class="col-6 d-grid gap-2">
+                        @if (rol == "Administrador")
+                        {
+                            <a asp-controller="Platos" asp-action="Edit" asp-route-id="@plato.Id" class="btn btn-warning">Editar</a>
+                            <a asp-controller="Platos" asp-action="Delete" asp-route-id="@plato.Id" class="btn btn-danger">Eliminar</a>
+                        }
+                        else if (esUsuario && plato.Disponible)
+                        {
+                            <form asp-controller="Cliente" asp-action="AgregarPlato" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="platoId" value="@plato.Id" />
+                                <label class="form-label mb-1">Cantidad</label>
+                                <input type="number" name="cantidad" value="1" min="1" max="20" class="form-control mb-2" />
+                                <button type="submit" class="btn btn-primary w-100">Agregar</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (esUsuario)
+{
+    <div class="card p-3 mt-4 border-0 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span>Cuando termines de elegir tus platos, continúa con la revisión del pedido.</span>
+            <a asp-controller="Cliente" asp-action="Pedido" class="btn btn-success">Continuar con el pedido</a>
+        </div>
+    </div>
+}

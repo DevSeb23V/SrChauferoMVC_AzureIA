@@ -1,0 +1,30 @@
+@model IEnumerable<Pedido>
+
+<h2 class="fw-bold mb-3">Reportes</h2>
+<p class="text-muted">Resumen de ventas, pedidos y ocupación de mesas para la gestión del restaurante.</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card stat p-3"><h6>Total ventas</h6><h2>S/. @ViewBag.TotalVentas</h2></div></div>
+    <div class="col-md-3"><div class="card stat p-3"><h6>Pedidos</h6><h2>@ViewBag.TotalPedidos</h2></div></div>
+    <div class="col-md-3"><div class="card stat p-3"><h6>Promedio venta</h6><h2>S/. @ViewBag.PromedioVenta</h2></div></div>
+    <div class="col-md-3"><div class="card stat p-3"><h6>Mesas ocupadas</h6><h2>@ViewBag.MesasOcupadas</h2></div></div>
+</div>
+
+<div class="card p-4">
+    <h4 class="fw-bold mb-3">Últimos pedidos</h4>
+    <table class="table">
+        <thead><tr><th>Fecha</th><th>Cliente</th><th>Mesa</th><th>Estado</th><th>Total</th></tr></thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@p.Cliente</td>
+                <td>@p.Mesa</td>
+                <td>@p.Estado</td>
+                <td>S/. @p.Total</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

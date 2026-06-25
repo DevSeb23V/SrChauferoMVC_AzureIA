@@ -1,0 +1,63 @@
+@model List<Pedido>
+
+<div class="d-flex justify-content-between mb-3">
+
+    <h2 class="fw-bold">
+        📋 Pedidos
+    </h2>
+
+    <a class="btn btn-primary"
+       asp-action="Create">
+        Nuevo Pedido
+    </a>
+
+</div>
+
+<div class="card p-3">
+
+    <table class="table table-hover">
+
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Mesa</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var pedido in Model)
+            {
+                <tr>
+
+                    <td>
+                        @pedido.Fecha.ToString("dd/MM/yyyy HH:mm")
+                    </td>
+
+                    <td>
+                        @pedido.Cliente
+                    </td>
+
+                    <td>
+                        @pedido.Mesa
+                    </td>
+
+                    <td>
+                        S/ @pedido.Total
+                    </td>
+
+                    <td>
+                        @pedido.Estado
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>

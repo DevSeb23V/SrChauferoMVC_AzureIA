@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "SrChauferoMVC_AzureIA": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:54140;http://localhost:54141"
+    }
+  }
+}

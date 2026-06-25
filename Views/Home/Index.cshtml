@@ -1,0 +1,201 @@
+<div class="hero mb-4">
+    <h1 class="display-5 fw-bold">
+        Dashboard Sr. Chaufero
+    </h1>
+
+    <p class="lead">
+        Panel ejecutivo para controlar platos, pedidos,
+        mesas, ventas e IA.
+    </p>
+</div>
+
+<!-- ==========================================
+     TARJETAS DE ESTADÍSTICAS
+========================================== -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <div class="card stat p-3 h-100">
+            <h6>🍽️ Platos registrados</h6>
+            <h2>@ViewBag.Platos</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat p-3 h-100">
+            <h6>📋 Pedidos</h6>
+            <h2>@ViewBag.Pedidos</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat p-3 h-100">
+            <h6>🪑 Mesas ocupadas</h6>
+            <h2>@ViewBag.MesasOcupadas / @ViewBag.Mesas</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat p-3 h-100">
+            <h6>💰 Ventas totales</h6>
+            <h2>S/. @ViewBag.VentasTotales</h2>
+        </div>
+    </div>
+
+</div>
+
+<!-- ==========================================
+     GRÁFICO + IA
+========================================== -->
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+        <div class="card p-4 h-100">
+
+            <h4 class="fw-bold mb-3">
+                📈 Ventas semanales
+            </h4>
+
+            <canvas id="ventasChart" height="120"></canvas>
+
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card p-4 h-100">
+
+            <h4 class="fw-bold mb-3">
+                🤖 Recomendación IA
+            </h4>
+
+            <p class="mb-2">
+                Analiza el comportamiento de ventas y genera
+                promociones desde el módulo IA.
+            </p>
+
+            <a class="btn btn-primary"
+               asp-controller="IA"
+               asp-action="Index">
+                Ir al asistente IA
+            </a>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ==========================================
+     INFORMACIÓN ADICIONAL
+========================================== -->
+
+<div class="row g-4 mt-1">
+
+    <div class="col-lg-6">
+        <div class="card p-4">
+
+            <h4 class="fw-bold mb-3">
+                🍛 Platos destacados
+            </h4>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Plato</th>
+                        <th>Ventas</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Chaufa especial</td>
+                        <td>25</td>
+                    </tr>
+
+                    <tr>
+                        <td>Aeropuerto</td>
+                        <td>18</td>
+                    </tr>
+
+                    <tr>
+                        <td>Pollo saltado</td>
+                        <td>15</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card p-4">
+
+            <h4 class="fw-bold mb-3">
+                🪑 Estado de mesas
+            </h4>
+
+            <p>
+                Libres:
+                <strong>@ViewBag.MesasLibres</strong>
+            </p>
+
+            <p>
+                Ocupadas:
+                <strong>@ViewBag.MesasOcupadas</strong>
+            </p>
+
+            <a class="btn btn-outline-primary"
+               asp-controller="Mesas"
+               asp-action="Index">
+                Gestionar mesas
+            </a>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('ventasChart');
+
+        new Chart(ctx, {
+        type: 'bar',
+        data: {
+        labels: [
+        'Lun',
+        'Mar',
+        'Mié',
+        'Jue',
+        'Vie',
+        'Sáb',
+        'Dom'
+        ],
+        datasets: [{
+        label: 'Ventas S/.',
+        data: [
+        450,
+        520,
+        600,
+        480,
+        780,
+        920,
+        650
+        ]
+        }]
+        },
+        options: {
+        responsive: true,
+        plugins: {
+        legend: {
+        display: false
+        }
+        }
+        }
+        });
+    </script>
+}
