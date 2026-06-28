@@ -50,5 +50,17 @@ namespace SrChauferoMVC_AzureIA.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Chat([FromBody] ChatRequest request)
+        {
+            var respuesta = await _ia.RecomendarAsync(request.Mensaje ?? "");
+            return Json(new { respuesta });
+        }
+
+        public class ChatRequest
+        {
+            public string? Mensaje { get; set; }
+        }
     }
 }

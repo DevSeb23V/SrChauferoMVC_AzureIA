@@ -9,14 +9,29 @@ namespace SrChauferoMVC_AzureIA.Controllers
             return HttpContext.Session.GetString("Usuario") != null;
         }
 
-        protected bool IsAdmin()
+        protected string RolActual()
         {
-            return HttpContext.Session.GetString("Rol") == "Administrador";
+            return HttpContext.Session.GetString("Rol") ?? "";
         }
 
-        protected bool IsUsuario()
+        protected bool IsAdmin()
         {
-            return HttpContext.Session.GetString("Rol") == "Usuario";
+            return RolActual() == "Administrador";
+        }
+
+        protected bool IsCocinero()
+        {
+            return RolActual() == "Cocinero";
+        }
+
+        protected bool IsMozo()
+        {
+            return RolActual() == "Mozo";
+        }
+
+        protected bool IsCliente()
+        {
+            return RolActual() == "Cliente";
         }
 
         protected IActionResult RequireLogin()
@@ -29,17 +44,41 @@ namespace SrChauferoMVC_AzureIA.Controllers
             return new EmptyResult();
         }
 
-        protected IActionResult RequireAdmin()
+        protected IActionResult RequireRole(params string[] roles)
         {
             var auth = RequireLogin();
-            if (auth is not EmptyResult) return auth;
 
-            if (!IsAdmin())
+            if (auth is not EmptyResult)
             {
-                return RedirectToAction("Index", "Platos");
+                return auth;
+            }
+
+            if (!roles.Contains(RolActual()))
+            {
+                return RedirectToAction("Login", "Account");
             }
 
             return new EmptyResult();
+        }
+
+        protected IActionResult RequireAdmin()
+        {
+            return RequireRole("Administrador");
+        }
+
+        protected IActionResult RequireCocinero()
+        {
+            return RequireRole("Cocinero", "Administrador");
+        }
+
+        protected IActionResult RequireMozo()
+        {
+            return RequireRole("Mozo", "Administrador");
+        }
+
+        protected IActionResult RequireCliente()
+        {
+            return RequireRole("Cliente", "Administrador");
         }
     }
 }

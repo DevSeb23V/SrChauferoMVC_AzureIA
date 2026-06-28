@@ -1,0 +1,66 @@
+﻿@model Pedido
+
+<h2 class="fw-bold mb-3">📋 Detalle del Pedido #@Model.Id</h2>
+
+<div class="card p-4 shadow-sm border-0 mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <strong>Cliente:</strong> @Model.Cliente
+        </div>
+
+        <div class="col-md-4">
+            <strong>Fecha:</strong> @Model.Fecha.ToString("dd/MM/yyyy HH:mm")
+        </div>
+
+        <div class="col-md-4">
+            <strong>Mesa:</strong> @(Model.Mesa == null ? "-" : Model.Mesa)
+        </div>
+
+        <div class="col-md-4 mt-2">
+            <strong>Tipo:</strong> @Model.TipoPedido
+        </div>
+
+        <div class="col-md-4 mt-2">
+            <strong>Estado pedido:</strong> @Model.EstadoPedido
+        </div>
+
+        <div class="col-md-4 mt-2">
+            <strong>Pago:</strong> @Model.EstadoPago
+        </div>
+    </div>
+</div>
+
+<div class="card p-4 shadow-sm border-0">
+    <h4 class="fw-bold mb-3">Platos solicitados</h4>
+
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Plato</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.Detalles)
+            {
+                <tr>
+                    <td>@item.NombrePlato</td>
+                    <td>@item.Cantidad</td>
+                    <td>S/ @item.PrecioUnitario.ToString("0.00")</td>
+                    <td>S/ @item.Subtotal.ToString("0.00")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h3>Total: S/ @Model.Total.ToString("0.00")</h3>
+    </div>
+</div>
+
+<a asp-controller="Mozo" asp-action="Index" class="btn btn-success mt-3">
+    Regresar
+</a>

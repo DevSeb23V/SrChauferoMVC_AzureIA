@@ -5,9 +5,6 @@ namespace SrChauferoMVC_AzureIA.Controllers
 {
     public class ReportesController : BaseController
     {
-        // ==========================================
-        // CONTEXTO DE BASE DE DATOS
-        // ==========================================
         private readonly ApplicationDbContext _db;
 
         public ReportesController(ApplicationDbContext db)
@@ -15,36 +12,38 @@ namespace SrChauferoMVC_AzureIA.Controllers
             _db = db;
         }
 
-        // ==========================================
-        // REPORTE GENERAL
-        // ==========================================
-        public IActionResult Index()
+        public IActionResult Index(string filtro = "total", DateTime? fecha = null)
         {
             var auth = RequireAdmin();
+            if (auth is not EmptyResult) return auth;
 
-            if (auth is not EmptyResult)
-            {
-                return auth;
-            }
+            var pedidos = _db.Pedidos.AsQueryable();
 
-            // Estadísticas generales
-            ViewBag.TotalVentas = _db.Pedidos.Sum(x => x.Total);
+            if (filtro == "hoy")
+                pedidos = pedidos.Where(p => p.Fecha.Date == DateTime.Today);
 
-            ViewBag.TotalPedidos = _db.Pedidos.Count();
+            if (filtro == "semana")
+                pedidos = pedidos.Where(p => p.Fecha >= DateTime.Today.AddDays(-7));
 
-            ViewBag.PromedioVenta = _db.Pedidos.Any()
-                ? _db.Pedidos.Average(x => x.Total)
-                : 0;
+            if (filtro == "mes")
+                pedidos = pedidos.Where(p => p.Fecha >= DateTime.Today.AddMonths(-1));
 
-            ViewBag.MesasOcupadas = _db.Mesas.Count(x => x.Estado == "Ocupada");
+            if (filtro == "fecha" && fecha != null)
+                pedidos = pedidos.Where(p => p.Fecha.Date == fecha.Value.Date);
 
-            // Últimos 10 pedidos registrados
-            var ultimosPedidos = _db.Pedidos
-                .OrderByDescending(x => x.Fecha)
-                .Take(10)
+            var lista = pedidos
+                .OrderByDescending(p => p.Fecha)
                 .ToList();
 
-            return View(ultimosPedidos);
+            ViewBag.TotalVentas = lista.Sum(x => x.Total);
+            ViewBag.TotalPedidos = lista.Count;
+            ViewBag.PromedioVenta = lista.Any() ? lista.Average(x => x.Total) : 0;
+            ViewBag.QR = lista.Count(x => x.MetodoPago == "QR");
+            ViewBag.Efectivo = lista.Count(x => x.MetodoPago == "Efectivo");
+            ViewBag.Filtro = filtro;
+            ViewBag.Fecha = fecha?.ToString("yyyy-MM-dd");
+
+            return View(lista);
         }
     }
 }

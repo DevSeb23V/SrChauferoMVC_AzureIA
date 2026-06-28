@@ -12,8 +12,8 @@ using SrChauferoMVC_AzureIA.Data;
 namespace SrChauferoMVC_AzureIA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260607143716_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260628051037_AgregarMetodoPagoPedido")]
+    partial class AgregarMetodoPagoPedido
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,40 @@ namespace SrChauferoMVC_AzureIA.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.DetallePedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombrePlato")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PedidoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlatoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecioUnitario")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("PlatoId");
+
+                    b.ToTable("DetallePedidos");
+                });
 
             modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.Insumo", b =>
                 {
@@ -63,11 +97,21 @@ namespace SrChauferoMVC_AzureIA.Migrations
                     b.Property<int>("Capacidad")
                         .HasColumnType("int");
 
+                    b.Property<string>("Cliente")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("HoraIngreso")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Numero")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Personas")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -87,18 +131,31 @@ namespace SrChauferoMVC_AzureIA.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Estado")
+                    b.Property<string>("EstadoPago")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EstadoPedido")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Mesa")
+                    b.Property<int?>("Mesa")
                         .HasColumnType("int");
 
+                    b.Property<string>("MetodoPago")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TipoPedido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -129,11 +186,36 @@ namespace SrChauferoMVC_AzureIA.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Platos");
+                });
+
+            modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.DetallePedido", b =>
+                {
+                    b.HasOne("SrChauferoMVC_AzureIA.Models.Pedido", "Pedido")
+                        .WithMany("Detalles")
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SrChauferoMVC_AzureIA.Models.Plato", "Plato")
+                        .WithMany()
+                        .HasForeignKey("PlatoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pedido");
+
+                    b.Navigation("Plato");
+                });
+
+            modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.Pedido", b =>
+                {
+                    b.Navigation("Detalles");
                 });
 #pragma warning restore 612, 618
         }

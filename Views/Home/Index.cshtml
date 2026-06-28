@@ -1,200 +1,155 @@
-<div class="hero mb-4">
-    <h1 class="display-5 fw-bold">
-        Dashboard Sr. Chaufero
-    </h1>
+@{
+    var ultimos = ViewBag.UltimosPedidos as List<Pedido>;
+}
 
-    <p class="lead">
-        Panel ejecutivo para controlar platos, pedidos,
-        mesas, ventas e IA.
-    </p>
+<div class="admin-hero mb-4">
+    <div>
+        <h1>Dashboard Ejecutivo</h1>
+        <p>Resumen visual de ventas, pedidos, cocina, mesas y métodos de pago.</p>
+    </div>
 </div>
 
-<!-- ==========================================
-     TARJETAS DE ESTADÍSTICAS
-========================================== -->
+<form method="get" class="card p-3 mb-4 border-0 shadow-sm">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Filtro</label>
+            <select name="filtro" class="form-select">
+                <option value="total">Total pedidos</option>
+                <option value="mes">Último mes</option>
+                <option value="semana">Última semana</option>
+                <option value="hoy">Hoy</option>
+                <option value="fecha">Fecha específica</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Fecha</label>
+            <input type="date" name="fecha" value="@ViewBag.Fecha" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-primary w-100">Aplicar filtro</button>
+        </div>
+    </div>
+</form>
 
 <div class="row g-3 mb-4">
-
     <div class="col-md-3">
-        <div class="card stat p-3 h-100">
-            <h6>🍽️ Platos registrados</h6>
-            <h2>@ViewBag.Platos</h2>
+        <div class="power-card">
+            <span>💰 Ventas</span>
+            <h2>S/ @ViewBag.TotalVentas.ToString("0.00")</h2>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card stat p-3 h-100">
-            <h6>📋 Pedidos</h6>
-            <h2>@ViewBag.Pedidos</h2>
+        <div class="power-card">
+            <span>📋 Pedidos</span>
+            <h2>@ViewBag.TotalPedidos</h2>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card stat p-3 h-100">
-            <h6>🪑 Mesas ocupadas</h6>
-            <h2>@ViewBag.MesasOcupadas / @ViewBag.Mesas</h2>
+        <div class="power-card">
+            <span>🧾 Promedio</span>
+            <h2>S/ @ViewBag.PromedioVenta.ToString("0.00")</h2>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card stat p-3 h-100">
-            <h6>💰 Ventas totales</h6>
-            <h2>S/. @ViewBag.VentasTotales</h2>
+        <div class="power-card">
+            <span>🪑 Mesas ocupadas</span>
+            <h2>@ViewBag.MesasOcupadas / @ViewBag.MesasTotal</h2>
         </div>
     </div>
-
 </div>
 
-<!-- ==========================================
-     GRÁFICO + IA
-========================================== -->
-
-<div class="row g-4">
-
+<div class="row g-4 mb-4">
     <div class="col-lg-8">
-        <div class="card p-4 h-100">
-
-            <h4 class="fw-bold mb-3">
-                📈 Ventas semanales
-            </h4>
-
+        <div class="card p-4 border-0 shadow-sm">
+            <h4 class="fw-bold mb-3">📊 Ventas visuales</h4>
             <canvas id="ventasChart" height="120"></canvas>
-
         </div>
     </div>
 
     <div class="col-lg-4">
-        <div class="card p-4 h-100">
+        <div class="card p-4 border-0 shadow-sm h-100">
+            <h4 class="fw-bold mb-3">🥧 Métodos de pago</h4>
+            <canvas id="pagosChart" height="220"></canvas>
+        </div>
+    </div>
+</div>
 
-            <h4 class="fw-bold mb-3">
-                🤖 Recomendación IA
-            </h4>
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card p-4 border-0 shadow-sm">
+            <h4 class="fw-bold mb-3">👨‍🍳 Estado de cocina</h4>
 
-            <p class="mb-2">
-                Analiza el comportamiento de ventas y genera
-                promociones desde el módulo IA.
-            </p>
+            <div class="power-mini bg-warning-subtle">
+                Pedidos en cocina: <strong>@ViewBag.PedidosCocina</strong>
+            </div>
 
-            <a class="btn btn-primary"
-               asp-controller="IA"
-               asp-action="Index">
-                Ir al asistente IA
-            </a>
-
+            <div class="power-mini bg-success-subtle">
+                Pedidos listos: <strong>@ViewBag.PedidosListos</strong>
+            </div>
         </div>
     </div>
 
-</div>
-
-<!-- ==========================================
-     INFORMACIÓN ADICIONAL
-========================================== -->
-
-<div class="row g-4 mt-1">
-
     <div class="col-lg-6">
-        <div class="card p-4">
+        <div class="card p-4 border-0 shadow-sm">
+            <h4 class="fw-bold mb-3">🕒 Últimos pedidos</h4>
 
-            <h4 class="fw-bold mb-3">
-                🍛 Platos destacados
-            </h4>
-
-            <table class="table">
+            <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>Plato</th>
-                        <th>Ventas</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    <tr>
-                        <td>Chaufa especial</td>
-                        <td>25</td>
-                    </tr>
-
-                    <tr>
-                        <td>Aeropuerto</td>
-                        <td>18</td>
-                    </tr>
-
-                    <tr>
-                        <td>Pollo saltado</td>
-                        <td>15</td>
-                    </tr>
+                    @foreach (var p in ultimos!)
+                    {
+                        <tr>
+                            <td>@p.Cliente</td>
+                            <td>@p.TipoPedido</td>
+                            <td>@p.EstadoPedido</td>
+                            <td>S/ @p.Total.ToString("0.00")</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-
         </div>
     </div>
-
-    <div class="col-lg-6">
-        <div class="card p-4">
-
-            <h4 class="fw-bold mb-3">
-                🪑 Estado de mesas
-            </h4>
-
-            <p>
-                Libres:
-                <strong>@ViewBag.MesasLibres</strong>
-            </p>
-
-            <p>
-                Ocupadas:
-                <strong>@ViewBag.MesasOcupadas</strong>
-            </p>
-
-            <a class="btn btn-outline-primary"
-               asp-controller="Mesas"
-               asp-action="Index">
-                Gestionar mesas
-            </a>
-
-        </div>
-    </div>
-
 </div>
 
-@section Scripts
-{
+@section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        const ctx = document.getElementById('ventasChart');
-
-        new Chart(ctx, {
+        new Chart(document.getElementById('ventasChart'), {
         type: 'bar',
         data: {
-        labels: [
-        'Lun',
-        'Mar',
-        'Mié',
-        'Jue',
-        'Vie',
-        'Sáb',
-        'Dom'
-        ],
+        labels: ['Ventas', 'Pedidos', 'Cocina', 'Listos'],
         datasets: [{
-        label: 'Ventas S/.',
+        label: 'Indicadores',
         data: [
-        450,
-        520,
-        600,
-        480,
-        780,
-        920,
-        650
+        @ViewBag.TotalVentas,
+        @ViewBag.TotalPedidos,
+        @ViewBag.PedidosCocina,
+        @ViewBag.PedidosListos
         ]
         }]
-        },
-        options: {
-        responsive: true,
-        plugins: {
-        legend: {
-        display: false
         }
-        }
+        });
+
+        new Chart(document.getElementById('pagosChart'), {
+        type: 'doughnut',
+        data: {
+        labels: ['QR', 'Efectivo'],
+        datasets: [{
+        data: [@ViewBag.QR, @ViewBag.Efectivo]
+        }]
         }
         });
     </script>

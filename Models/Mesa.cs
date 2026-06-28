@@ -4,23 +4,15 @@ namespace SrChauferoMVC_AzureIA.Models
 {
     public class Mesa
     {
-        // ==========================================
-        // IDENTIFICADOR
-        // ==========================================
         public int Id { get; set; }
 
-        // ==========================================
-        // DATOS DE LA MESA
-        // ==========================================
         public int Numero { get; set; }
 
-        public string Estado { get; set; } = "Libre";
+        public string Estado { get; set; } = "Disponible";
+        // Disponible / Cliente realizando pedido / Pedido en cocina / Pedido listo / Atendido / Ocupada
 
         public int Capacidad { get; set; } = 4;
 
-        // ==========================================
-        // DATOS DEL CLIENTE
-        // ==========================================
         [StringLength(100)]
         public string? Cliente { get; set; }
 

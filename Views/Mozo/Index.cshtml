@@ -1,0 +1,131 @@
+﻿@model List<Pedido>
+
+<h2 class="fw-bold mb-3">🧑‍💼 Panel del Mozo</h2>
+
+<p class="text-muted">
+    Aquí el mozo puede revisar pedidos, ver detalles, confirmar pagos y atender pedidos listos.
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No hay pedidos registrados.
+    </div>
+}
+else
+{
+    <div class="card p-3 shadow-sm border-0">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Mesa</th>
+                    <th>Tipo</th>
+                    <th>Estado pedido</th>
+                    <th>Método</th>
+                    <th>Pago</th>
+                    <th>Total</th>
+                    <th>Pedido</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var pedido in Model)
+                {
+                    <tr>
+                        <td>@pedido.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@pedido.Cliente</td>
+                        <td>@(pedido.Mesa == null ? "-" : pedido.Mesa)</td>
+                        <td>@pedido.TipoPedido</td>
+
+                        <td>
+                            @if (pedido.EstadoPedido == "Listo")
+                            {
+                                <span class="badge bg-success">Pedido listo</span>
+                            }
+                            else if (pedido.EstadoPedido == "Cocinandose")
+                            {
+                                <span class="badge bg-primary">Cocinándose</span>
+                            }
+                            else if (pedido.EstadoPedido == "EnviadoCocina")
+                            {
+                                <span class="badge bg-warning text-dark">En cocina</span>
+                            }
+                            else if (pedido.EstadoPedido == "Atendido")
+                            {
+                                <span class="badge bg-dark">Atendido</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@pedido.EstadoPedido</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (pedido.MetodoPago == "Efectivo")
+                            {
+                                <span class="badge bg-warning text-dark">Efectivo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark">QR</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (pedido.EstadoPago == "Pagado")
+                            {
+                                <span class="badge bg-success">Pagado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Pendiente</span>
+                            }
+                        </td>
+
+                        <td>S/ @pedido.Total.ToString("0.00")</td>
+
+                        <td>
+                            <a asp-controller="Mozo"
+                               asp-action="Detalle"
+                               asp-route-id="@pedido.Id"
+                               class="btn btn-sm btn-outline-primary">
+                                Ver pedido
+                            </a>
+                        </td>
+
+                        <td>
+                            @if (pedido.EstadoPago != "Pagado")
+                            {
+                                <form asp-controller="Mozo" asp-action="PedidoPagado" method="post"
+                                      onsubmit="return confirm('¿Estás seguro que el cliente ya pagó en efectivo?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@pedido.Id" />
+                                    <button class="btn btn-sm btn-success">
+                                        Confirmar efectivo
+                                    </button>
+                                </form>
+                            }
+                            else if (pedido.EstadoPedido == "Listo")
+                            {
+                                <form asp-controller="Mozo" asp-action="AtenderPedido" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@pedido.Id" />
+                                    <button class="btn btn-sm btn-warning">
+                                        Marcar atendido
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin acción</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

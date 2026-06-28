@@ -1,0 +1,92 @@
+﻿@model List<Pedido>
+
+<h2 class="fw-bold mb-3">👨‍🍳 Panel de Cocina</h2>
+
+<p class="text-muted">
+    Aquí aparecen los pedidos enviados a cocina. El cocinero puede aceptar el pedido y luego marcarlo como listo.
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No hay pedidos pendientes en cocina.
+    </div>
+}
+else
+{
+    <div class="row g-4 cocina-lista">
+        @foreach (var pedido in Model)
+        {
+            <div class="col-md-6 col-xl-4">
+                <div class="card pedido-cocina-card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex flex-column">
+
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2 gap-2">
+                                <h4 class="fw-bold mb-0">Pedido #@pedido.Id</h4>
+
+                                @if (pedido.EstadoPedido == "EnviadoCocina")
+                                {
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                }
+                                else if (pedido.EstadoPedido == "Cocinandose")
+                                {
+                                    <span class="badge bg-primary">Cocinándose</span>
+                                }
+                            </div>
+
+                            <p class="mb-1"><strong>Cliente:</strong> @pedido.Cliente</p>
+                            <p class="mb-1"><strong>Hora:</strong> @pedido.Fecha.ToString("HH:mm")</p>
+                            <p class="mb-1"><strong>Tipo:</strong> @pedido.TipoPedido</p>
+
+                            @if (pedido.Mesa != null)
+                            {
+                                <p class="mb-1"><strong>Mesa:</strong> @pedido.Mesa</p>
+                            }
+
+                            <hr />
+
+                            <h6 class="fw-bold">Platos solicitados</h6>
+                        </div>
+
+                        <div class="pedido-platos-scroll flex-grow-1">
+                            <ul class="list-group list-group-flush mb-3">
+                                @foreach (var item in pedido.Detalles)
+                                {
+                                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center gap-2">
+                                        <span class="pedido-plato-nombre">@item.NombrePlato</span>
+                                        <strong>x @item.Cantidad</strong>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="mt-auto pt-3">
+                            @if (pedido.EstadoPedido == "EnviadoCocina")
+                            {
+                                <form asp-controller="Cocina" asp-action="AceptarPedido" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@pedido.Id" />
+                                    <button class="btn btn-primary btn-lg w-100">
+                                        Aceptar pedido
+                                    </button>
+                                </form>
+                            }
+                            else if (pedido.EstadoPedido == "Cocinandose")
+                            {
+                                <form asp-controller="Cocina" asp-action="PedidoListo" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@pedido.Id" />
+                                    <button class="btn btn-success btn-lg w-100">
+                                        Pedido listo
+                                    </button>
+                                </form>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

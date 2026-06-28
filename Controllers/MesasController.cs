@@ -5,9 +5,6 @@ namespace SrChauferoMVC_AzureIA.Controllers
 {
     public class MesasController : BaseController
     {
-        // ==========================================
-        // CONTEXTO DE BASE DE DATOS
-        // ==========================================
         private readonly ApplicationDbContext _db;
 
         public MesasController(ApplicationDbContext db)
@@ -15,64 +12,45 @@ namespace SrChauferoMVC_AzureIA.Controllers
             _db = db;
         }
 
-        // ==========================================
-        // LISTADO DE MESAS
-        // ==========================================
         public IActionResult Index()
         {
             var auth = RequireLogin();
-
-            if (auth is not EmptyResult)
-            {
-                return auth;
-            }
+            if (auth is not EmptyResult) return auth;
 
             var mesas = _db.Mesas
                 .OrderBy(m => m.Numero)
                 .ToList();
 
+            ViewBag.Delivery = _db.Pedidos
+                .Where(p => p.TipoPedido == "Para llevar" && p.EstadoPedido != "Cancelado" && p.EstadoPedido != "Atendido")
+                .OrderByDescending(p => p.Fecha)
+                .ToList();
+
             return View(mesas);
         }
 
-        // ==========================================
-        // OCUPAR MESA
-        // ==========================================
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Ocupar(int id, string cliente, int personas)
         {
-            var auth = RequireLogin();
-
-            if (auth is not EmptyResult)
-            {
-                return auth;
-            }
+            var auth = RequireMozo();
+            if (auth is not EmptyResult) return auth;
 
             var mesa = _db.Mesas.Find(id);
+            if (mesa == null) return NotFound();
 
-            if (mesa == null)
-            {
-                return NotFound();
-            }
-
-            // Validar nombre del cliente
             if (string.IsNullOrWhiteSpace(cliente))
             {
-                TempData["Error"] =
-                    "Debe ingresar el nombre del cliente.";
-
+                TempData["Error"] = "Debe ingresar el nombre del cliente.";
                 return RedirectToAction(nameof(Index));
             }
 
-            // Validar cantidad de personas
             if (personas <= 0 || personas > mesa.Capacidad)
             {
-                TempData["Error"] =
-                    $"La cantidad de personas debe estar entre 1 y {mesa.Capacidad}.";
-
+                TempData["Error"] = $"La cantidad de personas debe estar entre 1 y {mesa.Capacidad}.";
                 return RedirectToAction(nameof(Index));
             }
 
-            // Actualizar datos de la mesa
             mesa.Estado = "Ocupada";
             mesa.Cliente = cliente.Trim();
             mesa.Personas = personas;
@@ -80,43 +58,28 @@ namespace SrChauferoMVC_AzureIA.Controllers
 
             _db.SaveChanges();
 
-            TempData["Ok"] =
-                $"Mesa {mesa.Numero} ocupada correctamente.";
-
+            TempData["Ok"] = $"Mesa {mesa.Numero} ocupada correctamente.";
             return RedirectToAction(nameof(Index));
         }
 
-        // ==========================================
-        // LIBERAR MESA
-        // ==========================================
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Liberar(int id)
         {
-            var auth = RequireLogin();
-
-            if (auth is not EmptyResult)
-            {
-                return auth;
-            }
+            var auth = RequireMozo();
+            if (auth is not EmptyResult) return auth;
 
             var mesa = _db.Mesas.Find(id);
+            if (mesa == null) return NotFound();
 
-            if (mesa == null)
-            {
-                return NotFound();
-            }
-
-            // Limpiar datos de la mesa
-            mesa.Estado = "Libre";
+            mesa.Estado = "Disponible";
             mesa.Cliente = null;
-            mesa.Personas = 0;
+            mesa.Personas = null;
             mesa.HoraIngreso = null;
 
             _db.SaveChanges();
 
-            TempData["Ok"] =
-                $"Mesa {mesa.Numero} liberada correctamente.";
-
+            TempData["Ok"] = $"Mesa {mesa.Numero} liberada correctamente.";
             return RedirectToAction(nameof(Index));
         }
     }

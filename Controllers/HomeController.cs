@@ -5,9 +5,6 @@ namespace SrChauferoMVC_AzureIA.Controllers
 {
     public class HomeController : BaseController
     {
-        // ==========================================
-        // INYECCIÓN DEL CONTEXTO DE BASE DE DATOS
-        // ==========================================
         private readonly ApplicationDbContext _db;
 
         public HomeController(ApplicationDbContext db)
@@ -15,39 +12,48 @@ namespace SrChauferoMVC_AzureIA.Controllers
             _db = db;
         }
 
-        // ==========================================
-        // DASHBOARD PRINCIPAL
-        // ==========================================
-        public IActionResult Index()
+        public IActionResult Index(string filtro = "total", DateTime? fecha = null)
         {
-            // Validar sesión
-            var auth = RequireLogin();
+            var auth = RequireAdmin();
+            if (auth is not EmptyResult) return auth;
 
-            if (auth is not EmptyResult)
-            {
-                return auth;
-            }
+            var pedidos = _db.Pedidos.AsQueryable();
 
-            if (HttpContext.Session.GetString("Rol") == "Usuario")
-            {
-                return RedirectToAction("Index", "Platos");
-            }
+            if (filtro == "hoy")
+                pedidos = pedidos.Where(p => p.Fecha.Date == DateTime.Today);
 
-            // Estadísticas generales
-            ViewBag.Platos = _db.Platos.Count();
-            ViewBag.Pedidos = _db.Pedidos.Count();
-            ViewBag.Mesas = _db.Mesas.Count();
+            if (filtro == "semana")
+                pedidos = pedidos.Where(p => p.Fecha >= DateTime.Today.AddDays(-7));
 
-            // Estado de mesas
-            ViewBag.MesasOcupadas = _db.Mesas.Count(x => x.Estado == "Ocupada");
-            ViewBag.MesasLibres = _db.Mesas.Count(x => x.Estado == "Libre");
+            if (filtro == "mes")
+                pedidos = pedidos.Where(p => p.Fecha >= DateTime.Today.AddMonths(-1));
 
-            // Ventas
-            ViewBag.VentasTotales = _db.Pedidos.Sum(x => x.Total);
+            if (filtro == "fecha" && fecha != null)
+                pedidos = pedidos.Where(p => p.Fecha.Date == fecha.Value.Date);
 
-            ViewBag.VentasDia = _db.Pedidos
-                .Where(x => x.Fecha.Date == DateTime.Today)
-                .Sum(x => x.Total);
+            var lista = pedidos
+                    .OrderByDescending(p => p.Fecha)
+                    .Take(500)
+                    .ToList();
+
+            ViewBag.Filtro = filtro;
+            ViewBag.Fecha = fecha?.ToString("yyyy-MM-dd");
+
+            ViewBag.TotalVentas = lista.Sum(x => x.Total);
+            ViewBag.TotalPedidos = lista.Count;
+            ViewBag.PromedioVenta = lista.Any() ? lista.Average(x => x.Total) : 0;
+            ViewBag.PedidosCocina = _db.Pedidos.Count(x => x.EstadoPedido == "EnviadoCocina" || x.EstadoPedido == "Cocinandose");
+            ViewBag.PedidosListos = _db.Pedidos.Count(x => x.EstadoPedido == "Listo");
+            ViewBag.MesasOcupadas = _db.Mesas.Count(x => x.Estado != "Disponible");
+            ViewBag.MesasTotal = _db.Mesas.Count();
+
+            ViewBag.QR = lista.Count(x => x.MetodoPago == "QR");
+            ViewBag.Efectivo = lista.Count(x => x.MetodoPago == "Efectivo");
+
+            ViewBag.UltimosPedidos = _db.Pedidos
+                .OrderByDescending(x => x.Fecha)
+                .Take(8)
+                .ToList();
 
             return View();
         }

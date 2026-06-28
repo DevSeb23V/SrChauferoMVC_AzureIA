@@ -24,56 +24,33 @@ namespace SrChauferoMVC_AzureIA.Controllers
                 return View(vm);
             }
 
-            // Perfil administrador de demostración
             if (vm.Usuario == "admin" && vm.Password == "Admin123")
             {
-                HttpContext.Session.SetString("Usuario", "admin");
-                HttpContext.Session.SetString("Nombre", "Administrador");
-                HttpContext.Session.SetString("Rol", "Administrador");
+                CrearSesion("admin", "Administrador", "Administrador");
                 return RedirectToAction("Index", "Home");
             }
 
-            // Perfil usuario de demostración
-            if (vm.Usuario == "usuario" && vm.Password == "Usuario123")
+            if (vm.Usuario == "cocinero" && vm.Password == "Cocinero123")
             {
-                HttpContext.Session.SetString("Usuario", "usuario");
-                HttpContext.Session.SetString("Nombre", "Usuario Cliente");
-                HttpContext.Session.SetString("Rol", "Usuario");
-                return RedirectToAction("Index", "Mesas");
+                CrearSesion("cocinero", "Cocinero", "Cocinero");
+                return RedirectToAction("Index", "Cocina");
+            }
+
+            if (vm.Usuario == "mozo" && vm.Password == "Mozo123")
+            {
+                CrearSesion("mozo", "Mozo", "Mozo");
+                return RedirectToAction("Index", "Mozo");
+            }
+
+            if (vm.Usuario == "cliente" && vm.Password == "Cliente123")
+            {
+                CrearSesion("cliente", "Cliente", "Cliente");
+                return RedirectToAction("Index", "Cliente");
             }
 
             vm.Error = "Usuario y/o contraseña incorrectos.";
             GenerateCaptcha();
             return View(vm);
-        }
-
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View(new RegisterViewModel());
-        }
-
-        [HttpPost]
-        public IActionResult Register(RegisterViewModel vm)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(vm);
-            }
-
-            if (vm.Password != vm.ConfirmarPassword)
-            {
-                vm.Error = "Las contraseñas no coinciden.";
-                return View(vm);
-            }
-
-            // Registro simple para el perfil de usuario/cliente.
-            // Para el proyecto académico se crea la sesión directamente como rol Usuario.
-            HttpContext.Session.SetString("Usuario", vm.Usuario.Trim());
-            HttpContext.Session.SetString("Nombre", vm.NombreCompleto.Trim());
-            HttpContext.Session.SetString("Rol", "Usuario");
-
-            return RedirectToAction("Index", "Mesas");
         }
 
         public IActionResult Logout()
@@ -82,11 +59,19 @@ namespace SrChauferoMVC_AzureIA.Controllers
             return RedirectToAction("Login");
         }
 
+        private void CrearSesion(string usuario, string nombre, string rol)
+        {
+            HttpContext.Session.SetString("Usuario", usuario);
+            HttpContext.Session.SetString("Nombre", nombre);
+            HttpContext.Session.SetString("Rol", rol);
+        }
+
         private void GenerateCaptcha()
         {
             Random rnd = new Random();
             int a = rnd.Next(1, 9);
             int b = rnd.Next(1, 9);
+
             HttpContext.Session.SetInt32("Captcha", a + b);
             ViewBag.Captcha = $"{a} + {b}";
         }

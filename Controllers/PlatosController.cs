@@ -28,7 +28,7 @@ namespace SrChauferoMVC_AzureIA.Controllers
                 return auth;
             }
 
-            if (IsUsuario())
+            if (IsCliente())
             {
                 var tipoPedido = HttpContext.Session.GetString("TipoPedido");
                 if (string.IsNullOrWhiteSpace(tipoPedido))
@@ -45,6 +45,9 @@ namespace SrChauferoMVC_AzureIA.Controllers
             }
 
             var platos = _db.Platos.OrderBy(p => p.Categoria).ToList();
+
+            var carritoJson = HttpContext.Session.GetString("Carrito");
+            ViewBag.CarritoJson = carritoJson;
 
             return View(platos);
         }
