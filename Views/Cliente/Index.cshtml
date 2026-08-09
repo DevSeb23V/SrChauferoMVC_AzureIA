@@ -5,29 +5,54 @@
 </p>
 
 <div class="row g-4">
-    <div class="col-md-6">
+
+    <div class="col-12 col-md-6">
+
         <form asp-controller="Cliente" asp-action="SetTipoPedido" method="post">
+
             @Html.AntiForgeryToken()
+
             <input type="hidden" name="tipo" value="Presencial" />
 
             <div class="card p-4 text-center shadow-sm border-0 h-100">
+
                 <h3>🪑 Comer en mesa</h3>
+
                 <p>Elige una mesa disponible y realiza tu pedido.</p>
-                <button class="btn btn-primary btn-lg">Para la mesa</button>
+
+                <button class="btn btn-primary btn-lg">
+                    Para la mesa
+                </button>
+
             </div>
+
         </form>
+
     </div>
 
-    <div class="col-md-6">
+
+    <div class="col-12 col-md-6">
+
         <form asp-controller="Cliente" asp-action="SetTipoPedido" method="post">
+
             @Html.AntiForgeryToken()
+
             <input type="hidden" name="tipo" value="Para llevar" />
 
             <div class="card p-4 text-center shadow-sm border-0 h-100">
+
                 <h3>🥡 Para llevar</h3>
+
                 <p>No necesitas seleccionar mesa.</p>
-                <button class="btn btn-success btn-lg">Para llevar</button>
+
+                <button class="btn btn-success btn-lg">
+                    Para llevar
+                </button>
+
             </div>
+
         </form>
+
     </div>
+
 </div>

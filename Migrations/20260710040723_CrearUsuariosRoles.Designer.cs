@@ -12,8 +12,8 @@ using SrChauferoMVC_AzureIA.Data;
 namespace SrChauferoMVC_AzureIA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260628051037_AgregarMetodoPagoPedido")]
-    partial class AgregarMetodoPagoPedido
+    [Migration("20260710040723_CrearUsuariosRoles")]
+    partial class CrearUsuariosRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -194,6 +194,60 @@ namespace SrChauferoMVC_AzureIA.Migrations
                     b.ToTable("Platos");
                 });
 
+            modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.Rol", b =>
+                {
+                    b.Property<int>("RolId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolId"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RolId");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.Usuario", b =>
+                {
+                    b.Property<int>("UsuarioId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioId"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Correo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreUsuario")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RolId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsuarioId");
+
+                    b.HasIndex("RolId");
+
+                    b.ToTable("Usuarios");
+                });
+
             modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.DetallePedido", b =>
                 {
                     b.HasOne("SrChauferoMVC_AzureIA.Models.Pedido", "Pedido")
@@ -213,9 +267,25 @@ namespace SrChauferoMVC_AzureIA.Migrations
                     b.Navigation("Plato");
                 });
 
+            modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.Usuario", b =>
+                {
+                    b.HasOne("SrChauferoMVC_AzureIA.Models.Rol", "Rol")
+                        .WithMany("Usuarios")
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
+                });
+
             modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.Pedido", b =>
                 {
                     b.Navigation("Detalles");
+                });
+
+            modelBuilder.Entity("SrChauferoMVC_AzureIA.Models.Rol", b =>
+                {
+                    b.Navigation("Usuarios");
                 });
 #pragma warning restore 612, 618
         }

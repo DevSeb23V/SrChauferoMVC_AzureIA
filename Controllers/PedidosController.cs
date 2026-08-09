@@ -64,5 +64,31 @@ namespace SrChauferoMVC_AzureIA.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        // ==========================================
+        // ELIMINAR PEDIDO (SOLO ADMIN)
+        // ==========================================
+        public IActionResult Delete(int id)
+        {
+            var rol = HttpContext.Session.GetString("Rol");
+
+            if (rol != "Administrador")
+            {
+                return Unauthorized();
+            }
+
+            var pedido = _db.Pedidos
+                .FirstOrDefault(x => x.Id == id);
+
+            if (pedido == null)
+            {
+                return NotFound();
+            }
+
+            _db.Pedidos.Remove(pedido);
+
+            _db.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

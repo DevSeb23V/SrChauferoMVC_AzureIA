@@ -13,7 +13,9 @@ Proyecto ASP.NET Core MVC para restaurante Sr. Chaufero.
 
 ## Usuario demo
 Usuario: admin
-Contraseña: Admin123*
+Contraseña: 
+
+*
 
 ## Azure SQL
 Editar `appsettings.json` y colocar la cadena de conexión de Azure SQL.

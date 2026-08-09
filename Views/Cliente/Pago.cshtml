@@ -5,96 +5,218 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-lg-8">
+
+    <div class="col-12 col-lg-8">
+
         <div class="card shadow-sm border-0 p-4 text-center">
 
+
             <div class="d-flex justify-content-start mb-3">
-                <a asp-controller="Cliente" asp-action="Pedido" class="btn btn-outline-primary">
+
+                <a asp-controller="Cliente"
+                   asp-action="Pedido"
+                   class="btn btn-outline-primary">
+
                     Regresar
+
                 </a>
+
             </div>
 
-            <h2 class="fw-bold text-success">✅ Confirmar pago</h2>
-            <p class="text-muted">Escanea el QR o selecciona pago en efectivo.</p>
+
+            <h2 class="fw-bold" style="color:#742384;">✅Confirmar pago</h2>
+
+            <p class="text-muted">
+                Escanea el QR o selecciona pago en efectivo.
+            </p>
+
+
 
             <div class="my-3 d-flex justify-content-center">
+
                 <div class="border rounded p-3 bg-white">
-                    @Html.Raw(ViewBag.QrSvg)
+
+                    <img src="~/img/QR-YAPE.jpg"
+                         asp-append-version="true"
+                         alt="QR Yape"
+                         class="img-fluid rounded shadow"
+                         style="max-width:280px;" />
+
                 </div>
+
             </div>
 
+
+
             <h5>Código de pago:</h5>
-            <div class="alert alert-dark fw-bold">@ViewBag.CodigoPago</div>
+
+            <div class="alert alert-dark fw-bold">
+                @ViewBag.CodigoPago
+            </div>
+
+
+
 
             <div class="row text-start mt-4">
-                <div class="col-md-4">
+
+
+                <div class="col-12 col-md-4 mb-2">
+
                     <strong>Modalidad:</strong> @tipoPedido
+
                 </div>
+
+
 
                 @if (tipoPedido == "Presencial")
                 {
-                    <div class="col-md-4">
+                    <div class="col-12 col-md-4 mb-2">
+
                         <strong>Mesa:</strong> @ViewBag.Mesa
+
                     </div>
                 }
 
-                <div class="col-md-4">
+
+
+                <div class="col-12 col-md-4 mb-2">
+
                     <strong>Total:</strong> S/ @totalPago.ToString("0.00")
+
                 </div>
+
+
             </div>
+
+
+
 
             @if (items != null && items.Any())
             {
+
                 <div class="text-start mt-4">
-                    <h5>Detalle del pedido</h5>
+
+
+                    <h5>
+                        Detalle del pedido
+                    </h5>
+
+
 
                     <ul class="list-group">
+
                         @foreach (var item in items)
                         {
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>@item.Cantidad x @item.Nombre</span>
-                                <strong>S/ @item.Subtotal.ToString("0.00")</strong>
+
+                            <li class="list-group-item d-flex justify-content-between flex-wrap">
+
+                                <span>
+                                    @item.Cantidad x @item.Nombre
+                                </span>
+
+
+                                <strong>
+                                    S/ @item.Subtotal.ToString("0.00")
+                                </strong>
+
+
                             </li>
+
                         }
+
                     </ul>
+
+
                 </div>
+
             }
 
-            <div class="alert alert-info mt-4 text-start">
-                <strong>Nota:</strong> El pago QR es simulado. Luego se puede integrar Izipay.
-            </div>
+
+
+
 
             <div class="row g-2 mt-3">
-                <div class="col-md-6">
-                    <form asp-controller="Cliente" asp-action="ConfirmarPago" method="post">
+
+
+                <div class="col-12 col-md-6">
+
+                    <form asp-controller="Cliente"
+                          asp-action="ConfirmarPago"
+                          method="post">
+
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="metodoPago" value="QR" />
+
+                        <input type="hidden"
+                               name="metodoPago"
+                               value="QR" />
+
                         <button class="btn btn-success btn-lg w-100">
+
                             Confirmar pago QR
+
                         </button>
+
+
                     </form>
+
+
                 </div>
 
-                <div class="col-md-6">
-                    <form asp-controller="Cliente" asp-action="ConfirmarPago" method="post">
+
+
+                <div class="col-12 col-md-6">
+
+                    <form asp-controller="Cliente"
+                          asp-action="ConfirmarPago"
+                          method="post">
+
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="metodoPago" value="Efectivo" />
+
+                        <input type="hidden"
+                               name="metodoPago"
+                               value="Efectivo" />
+
                         <button class="btn btn-warning btn-lg w-100">
+
                             Pagaré en efectivo
+
                         </button>
+
+
                     </form>
+
+
                 </div>
+
+
             </div>
 
-            <form asp-controller="Cliente" asp-action="CancelarPedido" method="post"
+
+
+
+            <form asp-controller="Cliente"
+                  asp-action="CancelarPedido"
+                  method="post"
                   class="mt-2"
                   onsubmit="return confirm('¿Seguro que deseas cancelar tu pedido?');">
+
+
                 @Html.AntiForgeryToken()
+
+
                 <button class="btn btn-outline-danger w-100">
+
                     Cancelar pedido
+
                 </button>
+
+
             </form>
 
+
+
         </div>
+
     </div>
+
 </div>

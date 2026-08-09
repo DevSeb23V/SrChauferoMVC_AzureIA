@@ -1,63 +1,260 @@
-@model List<Pedido>
+﻿@model List<Pedido>
 
-<div class="d-flex justify-content-between mb-3">
+@{
+    var rol = Context.Session.GetString("Rol");
+}
 
-    <h2 class="fw-bold">
-        📋 Pedidos
-    </h2>
+<h2 class="fw-bold mb-3">
+    @(rol == "Administrador" ? "📋 Gestión de Pedidos" : "🧑‍💼 Gestión de Pedidos")
+</h2>
 
-    <a class="btn btn-primary"
-       asp-action="Create">
-        Nuevo Pedido
-    </a>
+<p class="text-muted">
+    @(rol == "Administrador"
+        ? "El administrador puede visualizar, gestionar pedidos, confirmar pagos, atender pedidos y eliminar registros."
+        : "Aquí podrás revisar pedidos, confirmar pagos y atender pedidos listos.")
+</p>
 
-</div>
 
-<div class="card p-3">
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No hay pedidos registrados.
+    </div>
+}
+else
+{
+    <div class="card p-3 shadow-sm border-0">
 
-    <table class="table table-hover">
+        <div class="table-responsive">
 
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Mesa</th>
-                <th>Total</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
+            <table class="table table-hover align-middle">
 
-        <tbody>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Mesa</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Método</th>
+                        <th>Pago</th>
+                        <th>Total</th>
+                        <th>Pedido</th>
+                        <th>Acción</th>
 
-            @foreach (var pedido in Model)
-            {
-                <tr>
+                        @if (rol == "Administrador")
+                        {
+                            <th>Admin</th>
+                        }
 
-                    <td>
-                        @pedido.Fecha.ToString("dd/MM/yyyy HH:mm")
-                    </td>
+                    </tr>
+                </thead>
 
-                    <td>
-                        @pedido.Cliente
-                    </td>
 
-                    <td>
-                        @pedido.Mesa
-                    </td>
+                <tbody>
 
-                    <td>
-                        S/ @pedido.Total
-                    </td>
+                    @foreach (var pedido in Model)
+                    {
+                        <tr>
 
-                    <td>
-                        @pedido.EstadoPedido
-                    </td>
+                            <td>
+                                @pedido.Fecha.ToString("dd/MM/yyyy HH:mm")
+                            </td>
 
-                </tr>
-            }
 
-        </tbody>
+                            <td>
+                                @pedido.Cliente
+                            </td>
 
-    </table>
 
-</div>
+                            <td>
+                                @(pedido.Mesa == null ? "-" : "Mesa " + pedido.Mesa)
+                            </td>
+
+
+                            <td>
+                                @pedido.TipoPedido
+                            </td>
+
+
+                            <td>
+
+                                @if (pedido.EstadoPedido == "Listo")
+                                {
+                                    <span class="badge bg-success">
+                                        Pedido listo
+                                    </span>
+                                }
+                                else if (pedido.EstadoPedido == "Cocinandose")
+                                {
+                                    <span class="badge bg-primary">
+                                        Cocinándose
+                                    </span>
+                                }
+                                else if (pedido.EstadoPedido == "EnviadoCocina")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        En cocina
+                                    </span>
+                                }
+                                else if (pedido.EstadoPedido == "Atendido")
+                                {
+                                    <span class="badge bg-dark">
+                                        Atendido
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        @pedido.EstadoPedido
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <td>
+
+                                @if (pedido.MetodoPago == "Efectivo")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Efectivo
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info text-dark">
+                                        QR
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <td>
+
+                                @if (pedido.EstadoPago == "Pagado")
+                                {
+                                    <span class="badge bg-success">
+                                        Pagado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Pendiente
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <td>
+                                S/ @pedido.Total.ToString("0.00")
+                            </td>
+
+
+                            <td>
+
+                                <a asp-controller="Mozo"
+                                   asp-action="Detalle"
+                                   asp-route-id="@pedido.Id"
+                                   class="btn btn-sm btn-outline-primary">
+
+                                    Ver pedido
+
+                                </a>
+
+                            </td>
+
+
+
+                            <!-- ACCIONES MOZO + ADMIN -->
+
+                            <td>
+
+                                @if (pedido.EstadoPago != "Pagado")
+                                {
+                                    <form asp-controller="Mozo"
+                                          asp-action="PedidoPagado"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@pedido.Id" />
+
+                                        <button class="btn btn-sm btn-success">
+
+                                            Confirmar efectivo
+
+                                        </button>
+
+                                    </form>
+                                }
+
+                                else if (pedido.EstadoPedido == "Listo")
+                                {
+                                    <form asp-controller="Mozo"
+                                          asp-action="AtenderPedido"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@pedido.Id" />
+
+                                        <button class="btn btn-sm btn-warning">
+
+                                            Marcar atendido
+
+                                        </button>
+
+                                    </form>
+                                }
+
+                                else
+                                {
+                                    <span class="text-muted">
+                                        Sin acción
+                                    </span>
+                                }
+
+                            </td>
+
+
+
+                            <!-- SOLO ADMIN -->
+                            @if (rol == "Administrador")
+                            {
+
+                                <td>
+
+                                    <a asp-controller="Pedidos"
+                                       asp-action="Delete"
+                                       asp-route-id="@pedido.Id"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('¿Desea eliminar este pedido?');">
+
+                                        🗑 Eliminar
+
+                                    </a>
+
+                                </td>
+
+                            }
+
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+}

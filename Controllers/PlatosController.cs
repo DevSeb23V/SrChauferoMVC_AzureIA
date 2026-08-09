@@ -72,7 +72,7 @@ namespace SrChauferoMVC_AzureIA.Controllers
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Plato plato, IFormFile? imagen)
+        public IActionResult Create(Plato plato)
         {
             var auth = RequireAdmin();
 
@@ -81,39 +81,23 @@ namespace SrChauferoMVC_AzureIA.Controllers
                 return auth;
             }
 
+
             if (ModelState.IsValid)
             {
-                if( imagen != null && imagen.Length > 0)
-                {
-                    string carpeta = Path.Combine(Directory.GetCurrentDirectory(),
-                        
-                        "wwwroot/img/platos"
-                        );
 
-                    if (!Directory.Exists(carpeta))
-                    {
-                        Directory.CreateDirectory(carpeta);
-                    }
-
-                    string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(imagen.FileName);
-
-                    string rutaCompleta = Path.Combine(carpeta, nombreArchivo);
-
-                    using (var stream = new FileStream(rutaCompleta, FileMode.Create))
-                    {
-                        imagen.CopyTo(stream);
-                    }
-
-                    plato.ImagenUrl = "/img/platos" + nombreArchivo;
-
-                }
                 _db.Platos.Add(plato);
+
                 _db.SaveChanges();
 
-                TempData["Ok"] = "Plato registrado correctamente.";
+
+                TempData["Ok"] =
+                    "Plato registrado correctamente.";
+
 
                 return RedirectToAction(nameof(Index));
+
             }
+
 
             return View(plato);
         }
@@ -150,7 +134,7 @@ namespace SrChauferoMVC_AzureIA.Controllers
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Plato plato, IFormFile? imagen)
+        public IActionResult Edit(Plato plato)
         {
             var auth = RequireAdmin();
 
@@ -159,51 +143,47 @@ namespace SrChauferoMVC_AzureIA.Controllers
                 return auth;
             }
 
+
+
             if (ModelState.IsValid)
             {
+
                 var platoBD = _db.Platos.Find(plato.Id);
+
 
                 if (platoBD == null)
                 {
                     return NotFound();
                 }
 
+
+
                 platoBD.Nombre = plato.Nombre;
+
                 platoBD.Categoria = plato.Categoria;
+
                 platoBD.Precio = plato.Precio;
+
+                platoBD.ImagenUrl = plato.ImagenUrl;
+
                 platoBD.Disponible = plato.Disponible;
 
-                if (imagen != null && imagen.Length > 0)
-                {
-                    string carpeta = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot/img/platos"
-                    );
 
-                    if (!Directory.Exists(carpeta))
-                    {
-                        Directory.CreateDirectory(carpeta);
-                    }
 
-                    string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(imagen.FileName);
-
-                    string rutaCompleta = Path.Combine(carpeta, nombreArchivo);
-
-                    using (var stream = new FileStream(rutaCompleta, FileMode.Create))
-                    {
-                        imagen.CopyTo(stream);
-                    }
-
-                    platoBD.ImagenUrl = "/img/platos/" + nombreArchivo;
-                }
-
-                _db.Platos.Update(platoBD);
                 _db.SaveChanges();
 
-                TempData["Ok"] = "Plato actualizado correctamente.";
+
+
+                TempData["Ok"] =
+                    "Plato actualizado correctamente.";
+
+
 
                 return RedirectToAction(nameof(Index));
+
             }
+
+
 
             return View(plato);
         }

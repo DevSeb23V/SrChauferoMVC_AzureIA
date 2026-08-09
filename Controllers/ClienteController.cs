@@ -333,8 +333,8 @@ namespace SrChauferoMVC_AzureIA.Controllers
             HttpContext.Session.Remove("MesaSeleccionada");
             HttpContext.Session.Remove("TipoPedido");
             HttpContext.Session.Remove("NombreClientePedido");
-
-            TempData["Ok"] = "Pedido enviado a cocina correctamente.";
+                
+            TempData["Ok"] = "Pedido enviado correctamente.";
             return RedirectToAction("Index", "Cliente");
         }
 

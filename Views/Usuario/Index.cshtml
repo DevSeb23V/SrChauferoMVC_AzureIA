@@ -1,0 +1,193 @@
+﻿@model IEnumerable<Usuario>
+
+<h2 class="fw-bold mb-3">
+    👥 Usuarios del Sistema
+</h2>
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+
+    <p class="text-muted mb-0">
+        Administración de usuarios y roles del sistema.
+    </p>
+
+
+    <a asp-action="Crear"
+       class="btn btn-primary">
+        ➕ Crear Nuevo Usuario
+    </a>
+
+</div>
+
+
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+
+
+        <div class="table-responsive">
+
+
+            <table class="table table-hover table-bordered align-middle">
+
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>
+                            Nombre
+                        </th>
+
+                        <th>
+                            Usuario
+                        </th>
+
+                        <th>
+                            Correo
+                        </th>
+
+                        <th>
+                            Rol
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th>
+                            Acciones
+                        </th>
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    @foreach (var item in Model)
+                    {
+
+                        <tr>
+
+
+                            <td data-label="Nombre">
+                                @item.Nombre
+                            </td>
+
+
+
+                            <td data-label="Usuario">
+                                @item.NombreUsuario
+                            </td>
+
+
+
+                            <td data-label="Correo">
+                                @item.Correo
+                            </td>
+
+
+
+                            <td data-label="Rol">
+
+                                @(item.Rol != null
+                                    ? item.Rol.Nombre
+                                    : "Sin rol")
+
+                            </td>
+
+
+
+                            <td data-label="Estado">
+
+
+                                @if (item.Activo)
+                                {
+
+                                    <span class="badge bg-success">
+                                        Activo
+                                    </span>
+
+                                }
+                                else
+                                {
+
+                                    <span class="badge bg-danger">
+                                        Inactivo
+                                    </span>
+
+                                }
+
+
+                            </td>
+
+
+
+
+                            <td data-label="Acciones">
+
+
+                                <div class="d-flex flex-wrap gap-2">
+
+
+                                    <a asp-action="Editar"
+                                       asp-route-id="@item.UsuarioId"
+                                       class="btn btn-warning btn-sm">
+
+                                        ✏ Editar
+
+                                    </a>
+
+
+
+                                    <form asp-action="ConfirmarEliminar"
+                                          method="post"
+                                          onsubmit="return confirm('¿Está seguro que desea eliminar este usuario?');">
+
+
+                                        <input type="hidden"
+                                               name="UsuarioId"
+                                               value="@item.UsuarioId" />
+
+
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+
+                                            🗑 Eliminar
+
+                                        </button>
+
+
+                                    </form>
+
+
+                                </div>
+
+
+                            </td>
+
+
+                        </tr>
+
+
+                    }
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+</div>

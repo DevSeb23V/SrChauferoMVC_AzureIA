@@ -17,7 +17,7 @@
         <p class="text-muted">Selecciona si vas a comer en el restaurante o si tu pedido será para llevar.</p>
 
         <div class="row g-3">
-            <div class="col-md-6">
+            <div class="col-12 col-md-6">
                 <form asp-controller="Cliente" asp-action="SetTipoPedido" method="post" class="d-grid">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="tipo" value="Presencial" />
@@ -27,7 +27,7 @@
                 </form>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-12 col-md-6">
                 <form asp-controller="Cliente" asp-action="SetTipoPedido" method="post" class="d-grid">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="tipo" value="Para llevar" />
@@ -41,8 +41,6 @@
 
     @if (tipoPedido == "Presencial")
     {
-        <p class="text-muted">Elige una mesa disponible para realizar tu pedido.</p>
-
         @if (mesaSeleccionada != null)
         {
             <div class="alert alert-info d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -79,7 +77,7 @@ else
 
             if (esCliente)
             {
-                <div class="col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <div class="card mesa-card h-100 shadow-sm border-0">
                         <div class="card-body text-center">
                             <h3 class="fw-bold mb-2">Mesa @mesa.Numero</h3>
@@ -125,7 +123,7 @@ else
                     _ => "bg-secondary"
                 };
 
-                <div class="col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <div class="card mesa-card h-100 shadow-sm border-0">
                         <div class="card-body text-center">
                             <h3 class="fw-bold mb-2">Mesa @mesa.Numero</h3>
@@ -218,9 +216,9 @@ else
                     _ => "bg-secondary"
                 };
 
-                <div class="col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-4">
                     <div class="card shadow-sm border-0 h-100 p-3">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
                             <h4 class="fw-bold mb-0">Pedido #@pedido.Id</h4>
                             <span class="badge @colorPedido">@pedido.EstadoPedido</span>
                         </div>

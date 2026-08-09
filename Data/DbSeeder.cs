@@ -6,6 +6,71 @@ namespace SrChauferoMVC_AzureIA.Data
     {
         public static void Seed(ApplicationDbContext db)
         {
+            // ==========================
+            // CREAR ROLES
+            // ==========================
+
+            if (!db.Roles.Any())
+            {
+                db.Roles.AddRange(
+
+                    new Rol
+                    {
+                        Nombre = "Administrador"
+                    },
+
+                    new Rol
+                    {
+                        Nombre = "Cocinero"
+                    },
+
+                    new Rol
+                    {
+                        Nombre = "Mozo"
+                    },
+
+                    new Rol
+                    {
+                        Nombre = "Cliente"
+                    }
+
+                );
+
+
+                db.SaveChanges();
+            }
+
+
+
+            // ==========================
+            // CREAR ADMIN
+            // ==========================
+
+            if (!db.Usuarios.Any())
+            {
+
+                var rolAdmin =
+                    db.Roles
+                    .First(x => x.Nombre == "Administrador");
+
+
+                db.Usuarios.Add(
+                    new Usuario
+                    {
+                        Nombre = "Administrador Sistema",
+                        NombreUsuario = "admin",
+                        Password = "Admin123",
+                        Correo = "sebastianvalverde002@gmail.com",
+                        RolId = rolAdmin.RolId,
+                        Activo = true
+                    }
+                );
+
+
+                db.SaveChanges();
+
+            }
+
             if (!db.Platos.Any())
             {
                 db.Platos.AddRange(

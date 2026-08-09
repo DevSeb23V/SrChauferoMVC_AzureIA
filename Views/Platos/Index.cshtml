@@ -17,7 +17,8 @@
     var total = carrito.Sum(x => x.Subtotal);
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+
     <div>
         <h2 class="fw-bold">🍛 Carta de Platos</h2>
 
@@ -38,37 +39,74 @@
     {
         <form asp-controller="Cliente" asp-action="CancelarPedido" method="post"
               onsubmit="return confirm('¿Seguro que deseas cancelar tu pedido?');">
+
             @Html.AntiForgeryToken()
-            <button class="btn btn-outline-danger">Cancelar pedido</button>
+
+            <button class="btn btn-outline-danger w-100 w-md-auto">
+                Cancelar pedido
+            </button>
+
         </form>
     }
+
 </div>
+
 
 @if (esCliente)
 {
     <div class="row g-4">
-        <div class="col-lg-7">
+
+        <div class="col-12 col-lg-7">
+
             <div class="row g-4">
+
                 @foreach (var plato in Model)
                 {
-                    <div class="col-md-6">
+                    <div class="col-12 col-sm-6">
+
                         <div class="card p-3 h-100 shadow-sm border-0">
-                            <img class="food-img mb-3" src="@plato.ImagenUrl" alt="@plato.Nombre" />
+
+                            <img class="food-img mb-3 img-fluid"
+                                 src="@plato.ImagenUrl"
+                                 alt="@plato.Nombre" />
 
                             <h4>@plato.Nombre</h4>
-                            <span class="badge badge-soft mb-2">@plato.Categoria</span>
 
-                            <h5 class="mt-3">S/ @plato.Precio.ToString("0.00")</h5>
-                            <p>@(plato.Disponible ? "Disponible" : "No disponible")</p>
+                            <span class="badge badge-soft mb-2">
+                                @plato.Categoria
+                            </span>
+
+                            <h5 class="mt-3">
+                                S/ @plato.Precio.ToString("0.00")
+                            </h5>
+
+                            <p>
+                                @(plato.Disponible ? "Disponible" : "No disponible")
+                            </p>
+
 
                             @if (plato.Disponible)
                             {
-                                <form asp-controller="Cliente" asp-action="AgregarPlato" method="post">
+
+                                <form asp-controller="Cliente"
+                                      asp-action="AgregarPlato"
+                                      method="post">
+
                                     @Html.AntiForgeryToken()
-                                    <input type="hidden" name="platoId" value="@plato.Id" />
+
+                                    <input type="hidden"
+                                           name="platoId"
+                                           value="@plato.Id" />
+
 
                                     <div class="input-group mb-3">
-                                        <button type="button" class="btn btn-outline-danger" onclick="restarCantidad('cantidad-@plato.Id')">-</button>
+
+                                        <button type="button"
+                                                class="btn btn-outline-danger"
+                                                onclick="restarCantidad('cantidad-@plato.Id')">
+                                            -
+                                        </button>
+
 
                                         <input id="cantidad-@plato.Id"
                                                type="number"
@@ -78,53 +116,123 @@
                                                max="20"
                                                class="form-control text-center" />
 
-                                        <button type="button" class="btn btn-outline-success" onclick="sumarCantidad('cantidad-@plato.Id')">+</button>
+
+                                        <button type="button"
+                                                class="btn btn-outline-success"
+                                                onclick="sumarCantidad('cantidad-@plato.Id')">
+                                            +
+                                        </button>
+
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary w-100">
+
+                                    <button type="submit"
+                                            class="btn btn-primary w-100">
+
                                         Agregar al pedido
+
                                     </button>
+
                                 </form>
+
                             }
+
                         </div>
+
                     </div>
                 }
+
             </div>
+
         </div>
 
-        <div class="col-lg-5">
-            <div class="card p-3 shadow-sm border-0 sticky-top" style="top: 90px;">
-                <h4 class="fw-bold mb-3">🛒 Mi pedido</h4>
+
+
+        <div class="col-12 col-lg-5">
+
+
+            <div class="card p-3 shadow-sm border-0 carrito-card">
+
+
+                <h4 class="fw-bold mb-3">
+                    🛒 Mi pedido
+                </h4>
+
 
                 @if (!carrito.Any())
                 {
-                    <div class="alert alert-warning">Aún no agregaste platos.</div>
+
+                    <div class="alert alert-warning">
+                        Aún no agregaste platos.
+                    </div>
+
                 }
                 else
                 {
+
                     <div class="table-responsive">
+
                         <table class="table table-sm align-middle">
+
                             <thead>
+
                                 <tr>
-                                    <th>Plato</th>
-                                    <th>Cant.</th>
-                                    <th>Sub.</th>
+
+                                    <th>
+                                        Plato
+                                    </th>
+
+                                    <th>
+                                        Cant.
+                                    </th>
+
+                                    <th>
+                                        Sub.
+                                    </th>
+
                                     <th></th>
+
                                 </tr>
+
                             </thead>
+
+
                             <tbody>
+
                                 @foreach (var item in carrito)
                                 {
+
                                     <tr>
+
                                         <td>
-                                            <strong>@item.Nombre</strong><br />
-                                            <small>S/ @item.Precio.ToString("0.00")</small>
+
+                                            <strong>
+                                                @item.Nombre
+                                            </strong>
+
+                                            <br />
+
+                                            <small>
+                                                S/ @item.Precio.ToString("0.00")
+                                            </small>
+
                                         </td>
 
-                                        <td style="width:120px;">
-                                            <form asp-controller="Cliente" asp-action="ActualizarItem" method="post" class="d-flex gap-1">
+
+                                        <td>
+
+                                            <form asp-controller="Cliente"
+                                                  asp-action="ActualizarItem"
+                                                  method="post"
+                                                  class="d-flex gap-1">
+
                                                 @Html.AntiForgeryToken()
-                                                <input type="hidden" name="platoId" value="@item.PlatoId" />
+
+
+                                                <input type="hidden"
+                                                       name="platoId"
+                                                       value="@item.PlatoId" />
+
 
                                                 <input id="pedido-@item.PlatoId"
                                                        name="cantidad"
@@ -134,78 +242,312 @@
                                                        max="20"
                                                        class="form-control form-control-sm text-center" />
 
-                                                <button class="btn btn-sm btn-warning">OK</button>
+
+                                                <button class="btn btn-sm btn-warning">
+                                                    OK
+                                                </button>
+
                                             </form>
+
                                         </td>
 
-                                        <td>S/ @item.Subtotal.ToString("0.00")</td>
 
                                         <td>
-                                            <form asp-controller="Cliente" asp-action="EliminarItem" method="post">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="platoId" value="@item.PlatoId" />
-                                                <button class="btn btn-sm btn-outline-danger">X</button>
-                                            </form>
+                                            S/ @item.Subtotal.ToString("0.00")
                                         </td>
+
+
+                                        <td>
+
+                                            <form asp-controller="Cliente"
+                                                  asp-action="EliminarItem"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+
+                                                <input type="hidden"
+                                                       name="platoId"
+                                                       value="@item.PlatoId" />
+
+
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    X
+                                                </button>
+
+                                            </form>
+
+                                        </td>
+
                                     </tr>
+
                                 }
+
                             </tbody>
+
                         </table>
+
                     </div>
+
 
                     <hr />
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4>Total:</h4>
-                        <h4>S/ @total.ToString("0.00")</h4>
+
+                    <div class="d-flex justify-content-between flex-wrap gap-2">
+
+                        <h4>
+                            Total:
+                        </h4>
+
+                        <h4>
+                            S/ @total.ToString("0.00")
+                        </h4>
+
                     </div>
 
-                    <a asp-controller="Cliente" asp-action="Pedido" class="btn btn-success btn-lg w-100 mt-3">
+
+                    <a asp-controller="Cliente"
+                       asp-action="Pedido"
+                       class="btn btn-success btn-lg w-100 mt-3">
+
                         Hacer pedido
+
                     </a>
+
                 }
+
+
             </div>
+
+
         </div>
+
+
     </div>
 }
+
+
 else
 {
-    <div class="row g-4">
-        @foreach (var plato in Model)
-        {
-            <div class="col-md-4">
-                <div class="card p-3 h-100 shadow-sm border-0">
-                    <img class="food-img mb-3" src="@plato.ImagenUrl" alt="@plato.Nombre" />
-                    <h4>@plato.Nombre</h4>
-                    <span class="badge badge-soft mb-2">@plato.Categoria</span>
-                    <h5 class="mt-3">S/ @plato.Precio.ToString("0.00")</h5>
-                    <p>@(plato.Disponible ? "Disponible" : "No disponible")</p>
 
-                    @if (rol == "Administrador")
-                    {
-                        <div class="d-grid gap-2 mt-auto">
-                            <a asp-controller="Platos" asp-action="Edit" asp-route-id="@plato.Id" class="btn btn-warning">Editar</a>
-                            <a asp-controller="Platos" asp-action="Delete" asp-route-id="@plato.Id" class="btn btn-danger">Eliminar</a>
-                        </div>
-                    }
-                </div>
-            </div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+
+        <div>
+
+            <p class="text-muted mb-0">
+                Administra todos los platos del restaurante.
+            </p>
+
+        </div>
+
+
+        @if (rol == "Administrador")
+        {
+
+            <a asp-action="Create"
+               class="btn btn-success">
+
+                ➕ Nuevo plato
+
+            </a>
+
         }
+
+
     </div>
+
+
+
+    <div class="card shadow border-0">
+
+
+        <div class="card-body">
+
+
+            <div class="table-responsive">
+
+
+                <table class="table table-hover align-middle">
+
+
+                    <thead class="table-dark">
+
+
+                        <tr>
+
+                            <th>
+                                Imagen
+                            </th>
+
+                            <th>
+                                Nombre
+                            </th>
+
+                            <th>
+                                Categoría
+                            </th>
+
+                            <th>
+                                Precio
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
+
+                        </tr>
+
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        @foreach (var plato in Model)
+                        {
+
+                            <tr>
+
+
+                                <td>
+
+
+                                    <img src="@plato.ImagenUrl"
+                                         class="img-fluid rounded"
+                                         style="width:90px;height:70px;object-fit:cover;" />
+
+
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        @plato.Nombre
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    @plato.Categoria
+                                </td>
+
+
+                                <td>
+                                    S/ @plato.Precio.ToString("0.00")
+                                </td>
+
+
+                                <td>
+
+                                    @if (plato.Disponible)
+                                    {
+
+                                        <span class="badge bg-success">
+                                            Disponible
+                                        </span>
+
+                                    }
+                                    else
+                                    {
+
+                                        <span class="badge bg-danger">
+                                            No disponible
+                                        </span>
+
+                                    }
+
+
+                                </td>
+
+
+                                <td>
+
+
+                                    <div class="d-flex flex-wrap gap-2">
+
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@plato.Id"
+                                           class="btn btn-warning btn-sm">
+
+                                            ✏ Editar
+
+                                        </a>
+
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@plato.Id"
+                                           class="btn btn-danger btn-sm">
+
+                                            🗑 Eliminar
+
+                                        </a>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+                            </tr>
+
+                        }
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
 }
 
+
+
 @section Scripts {
+
     <script>
+
         function sumarCantidad(id) {
+
             const input = document.getElementById(id);
+
             let valor = parseInt(input.value || "1");
-            if (valor < 20) input.value = valor + 1;
+
+            if (valor < 20)
+                input.value = valor + 1;
+
         }
 
+
         function restarCantidad(id) {
+
             const input = document.getElementById(id);
+
             let valor = parseInt(input.value || "1");
-            if (valor > 1) input.value = valor - 1;
+
+            if (valor > 1)
+                input.value = valor - 1;
+
         }
+
     </script>
+
+
 }

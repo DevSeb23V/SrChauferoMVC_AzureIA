@@ -9,56 +9,196 @@
     </div>
 }
 
+
 <form asp-action="Edit" method="post" enctype="multipart/form-data" class="card p-4">
+
     <input asp-for="Id" type="hidden" />
+
+
     @if (!ViewData.ModelState.IsValid)
     {
         <div asp-validation-summary="All" class="alert alert-danger"></div>
     }
 
+
+
     <div class="row g-3">
-        <div class="col-md-6">
-            <label asp-for="Nombre" class="form-label">Nombre</label>
-            <input asp-for="Nombre" class="form-control" />
-            <span asp-validation-for="Nombre" class="text-danger"></span>
+
+
+        <div class="col-12 col-md-6">
+
+            <label asp-for="Nombre" class="form-label">
+                Nombre
+            </label>
+
+            <input asp-for="Nombre"
+                   class="form-control" />
+
+            <span asp-validation-for="Nombre"
+                  class="text-danger"></span>
+
         </div>
 
-        <div class="col-md-6">
-            <label asp-for="Categoria" class="form-label">Categoría</label>
-            <input asp-for="Categoria" class="form-control" />
-            <span asp-validation-for="Categoria" class="text-danger"></span>
+
+
+
+        <div class="col-12 col-md-6">
+
+            <label asp-for="Categoria" class="form-label">
+                Categoría
+            </label>
+
+            <input asp-for="Categoria"
+                   class="form-control" />
+
+            <span asp-validation-for="Categoria"
+                  class="text-danger"></span>
+
         </div>
 
-        <div class="col-md-6">
-            <label asp-for="Precio" class="form-label">Precio</label>
-            <input asp-for="Precio" class="form-control" placeholder="25.00" />
-            <span asp-validation-for="Precio" class="text-danger"></span>
+
+
+
+        <div class="col-12 col-md-6">
+
+            <label asp-for="Precio" class="form-label">
+                Precio
+            </label>
+
+            <input asp-for="Precio"
+                   class="form-control"
+                   placeholder="25.00" />
+
+            <span asp-validation-for="Precio"
+                  class="text-danger"></span>
+
         </div>
 
-        <div class="col-md-6">
-            <label class="form-label">Imagen del Plato</label>
-            <input type="file" name="imagen" class="form-control" accept="image/*" />
+
+
+
+        <div class="col-12 col-md-6">
+
+
+            <label class="form-label">
+                URL de imagen
+            </label>
+
+
+            <input asp-for="ImagenUrl"
+                   class="form-control"
+                   placeholder="https://ejemplo.com/plato.jpg" />
+
+
+            <span asp-validation-for="ImagenUrl"
+                  class="text-danger">
+            </span>
+
+
         </div>
-        <div class="col-md-6 mt-4 mb-3">
-            <div class="form-check mt-6">
-                <input asp-for="Disponible" class="form-check-input" />
-                <label asp-for="Disponible" class="form-check-label">
+
+
+
+
+        <div class="col-12 col-md-6 d-flex align-items-center mt-4">
+
+
+            <div class="form-check form-switch fs-5">
+
+
+                <input asp-for="Disponible"
+                       class="form-check-input"
+                       id="switchDisponible"
+                       onchange="cambiarTextoDisponible(this)" />
+
+
+
+                <label class="form-check-label fw-bold ms-2"
+                       id="textoDisponible"
+                       for="switchDisponible">
+
                     Disponible
+
                 </label>
+
+
             </div>
+
+
         </div>
+
+
     </div>
 
-    <div class="row mt-3">
-        <div class="col-6">
-            <button type="submit" class="btn btn-warning w-100">
+
+
+
+    <div class="row mt-3 g-2">
+
+
+        <div class="col-12 col-md-6">
+
+            <button type="submit"
+                    class="btn btn-warning w-100">
+
                 Actualizar
+
             </button>
+
         </div>
-        <div class="col-6">
-            <a asp-controller="Platos" asp-action="Index" class="btn btn-success w-100">
+
+
+
+
+        <div class="col-12 col-md-6">
+
+            <a asp-controller="Platos"
+               asp-action="Index"
+               class="btn btn-success w-100">
+
                 Regresar
+
             </a>
+
         </div>
+
+
     </div>
+
+
 </form>
+
+
+
+
+@section Scripts {
+
+    <script>
+
+        function cambiarTextoDisponible(control){
+
+            const texto=document.getElementById("textoDisponible");
+
+            if(control.checked){
+
+                texto.innerHTML="Disponible";
+                texto.className="form-check-label fw-bold ms-2 text-success";
+
+            }else{
+
+                texto.innerHTML="No disponible";
+                texto.className="form-check-label fw-bold ms-2 text-danger";
+
+            }
+
+        }
+
+        document.addEventListener("DOMContentLoaded",function(){
+
+            cambiarTextoDisponible(document.getElementById("switchDisponible"));
+
+        });
+
+    </script>
+
+}

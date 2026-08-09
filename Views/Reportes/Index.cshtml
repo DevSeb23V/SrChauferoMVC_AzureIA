@@ -1,70 +1,271 @@
 @model List<Pedido>
 
-<h2 class="fw-bold mb-3">📊 Reportes Administrativos</h2>
-<p class="text-muted">Consulta ventas, pedidos y métodos de pago por rango de tiempo.</p>
+<h2 class="fw-bold mb-3">
+    📊 Reportes Administrativos
+</h2>
+
+<p class="text-muted">
+    Consulta ventas, pedidos y métodos de pago por rango de tiempo.
+</p>
+
 
 <form method="get" class="card p-3 mb-4 border-0 shadow-sm">
+
     <div class="row g-3 align-items-end">
-        <div class="col-md-3">
-            <label class="form-label">Ver reporte</label>
+
+
+        <div class="col-12 col-md-3">
+
+            <label class="form-label">
+                Ver reporte
+            </label>
+
             <select name="filtro" class="form-select">
-                <option value="total">Total pedidos</option>
-                <option value="mes">Último mes</option>
-                <option value="semana">Última semana</option>
-                <option value="hoy">Hoy</option>
-                <option value="fecha">Fecha específica</option>
+
+                <option value="total" selected="@(ViewBag.Filtro == "total")">
+                    Total pedidos
+                </option>
+
+                <option value="mes" selected="@(ViewBag.Filtro == "mes")">
+                    Último mes
+                </option>
+
+                <option value="semana" selected="@(ViewBag.Filtro == "semana")">
+                    Última semana
+                </option>
+
+                <option value="hoy" selected="@(ViewBag.Filtro == "hoy")">
+                    Hoy
+                </option>
+
+                <option value="fecha" selected="@(ViewBag.Filtro == "fecha")">
+                    Fecha específica
+                </option>
+
             </select>
+
         </div>
 
-        <div class="col-md-3">
-            <label class="form-label">Calendario</label>
-            <input type="date" name="fecha" value="@ViewBag.Fecha" class="form-control" />
+
+
+        <div class="col-12 col-md-3">
+
+            <label class="form-label">
+                Calendario
+            </label>
+
+            <input type="date"
+                   name="fecha"
+                   value="@ViewBag.Fecha"
+                   class="form-control" />
+
         </div>
 
-        <div class="col-md-3">
-            <button class="btn btn-primary w-100">Buscar</button>
+
+
+        <div class="col-12 col-md-3">
+
+            <button class="btn btn-primary w-100">
+                Buscar
+            </button>
+
         </div>
+
+
     </div>
+
 </form>
 
+
+
 <div class="row g-3 mb-4">
-    <div class="col-md-3"><div class="power-card"><span>Total ventas</span><h2>S/ @ViewBag.TotalVentas.ToString("0.00")</h2></div></div>
-    <div class="col-md-3"><div class="power-card"><span>Pedidos</span><h2>@ViewBag.TotalPedidos</h2></div></div>
-    <div class="col-md-3"><div class="power-card"><span>Promedio</span><h2>S/ @ViewBag.PromedioVenta.ToString("0.00")</h2></div></div>
-    <div class="col-md-3"><div class="power-card"><span>QR / Efectivo</span><h2>@ViewBag.QR / @ViewBag.Efectivo</h2></div></div>
+
+
+    <div class="col-12 col-sm-6 col-lg-3">
+
+        <div class="power-card">
+
+            <span>
+                Total ventas
+            </span>
+
+            <h2>
+                S/ @ViewBag.TotalVentas.ToString("0.00")
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-12 col-sm-6 col-lg-3">
+
+        <div class="power-card">
+
+            <span>
+                Pedidos
+            </span>
+
+            <h2>
+                @ViewBag.TotalPedidos
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-12 col-sm-6 col-lg-3">
+
+        <div class="power-card">
+
+            <span>
+                Promedio
+            </span>
+
+            <h2>
+                S/ @ViewBag.PromedioVenta.ToString("0.00")
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-12 col-sm-6 col-lg-3">
+
+        <div class="power-card">
+
+            <span>
+                QR / Efectivo
+            </span>
+
+            <h2>
+                @ViewBag.QR / @ViewBag.Efectivo
+            </h2>
+
+        </div>
+
+    </div>
+
+
 </div>
 
+
+
+
 <div class="card p-4 border-0 shadow-sm">
-    <h4 class="fw-bold mb-3">📋 Lista de pedidos</h4>
 
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Mesa</th>
-                <th>Tipo</th>
-                <th>Estado</th>
-                <th>Pago</th>
-                <th>Método</th>
-                <th>Total</th>
-            </tr>
-        </thead>
 
-        <tbody>
-            @foreach (var p in Model)
-            {
+    <h4 class="fw-bold mb-3">
+        📋 Lista de pedidos
+    </h4>
+
+
+
+    <div class="table-responsive">
+
+        <table class="table table-hover align-middle">
+
+
+            <thead>
+
                 <tr>
-                    <td>@p.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@p.Cliente</td>
-                    <td>@(p.Mesa == null ? "-" : p.Mesa)</td>
-                    <td>@p.TipoPedido</td>
-                    <td>@p.EstadoPedido</td>
-                    <td>@p.EstadoPago</td>
-                    <td>@p.MetodoPago</td>
-                    <td>S/ @p.Total.ToString("0.00")</td>
+
+                    <th>
+                        Fecha
+                    </th>
+
+                    <th>
+                        Cliente
+                    </th>
+
+                    <th>
+                        Mesa
+                    </th>
+
+                    <th>
+                        Tipo
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                    <th>
+                        Pago
+                    </th>
+
+                    <th>
+                        Método
+                    </th>
+
+                    <th>
+                        Total
+                    </th>
+
                 </tr>
-            }
-        </tbody>
-    </table>
+
+            </thead>
+
+
+
+            <tbody>
+
+
+                @foreach (var p in Model)
+                {
+
+                    <tr>
+
+                        <td>
+                            @p.Fecha.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+
+                        <td>
+                            @p.Cliente
+                        </td>
+
+                        <td>
+                            @(p.Mesa == null ? "-" : p.Mesa)
+                        </td>
+
+                        <td>
+                            @p.TipoPedido
+                        </td>
+
+                        <td>
+                            @p.EstadoPedido
+                        </td>
+
+                        <td>
+                            @p.EstadoPago
+                        </td>
+
+                        <td>
+                            @p.MetodoPago
+                        </td>
+
+                        <td>
+                            S/ @p.Total.ToString("0.00")
+                        </td>
+
+
+                    </tr>
+
+                }
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
 </div>

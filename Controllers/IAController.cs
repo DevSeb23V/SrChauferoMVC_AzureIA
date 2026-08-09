@@ -21,7 +21,7 @@ namespace SrChauferoMVC_AzureIA.Controllers
         public IActionResult Index()
         {
             // Validar sesión
-            var auth = RequireAdmin();
+            var auth = RequireIA();
 
             if (auth is not EmptyResult)
             {
@@ -37,7 +37,7 @@ namespace SrChauferoMVC_AzureIA.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(string consulta)
         {
-            var auth = RequireAdmin();
+            var auth = RequireIA();
 
             if (auth is not EmptyResult)
             {

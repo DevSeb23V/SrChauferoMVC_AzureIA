@@ -16,10 +16,16 @@ namespace SrChauferoMVC_AzureIA.Data
         public DbSet<Insumo> Insumos => Set<Insumo>();
         public DbSet<Pedido> Pedidos => Set<Pedido>();
         public DbSet<DetallePedido> DetallePedidos => Set<DetallePedido>();
-
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Rol> Roles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Usuario>()
+                .HasOne(x => x.Rol)
+                .WithMany(x => x.Usuarios)
+                .HasForeignKey(x => x.RolId);
 
             modelBuilder.Entity<Plato>()
                 .Property(x => x.Precio)

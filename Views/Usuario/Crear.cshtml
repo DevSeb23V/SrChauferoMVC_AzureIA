@@ -1,0 +1,154 @@
+﻿@model Usuario
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">
+                Crear Usuario
+            </h3>
+        </div>
+
+
+        <div class="card-body">
+
+
+            <form asp-action="Crear" method="post">
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Nombre completo
+                    </label>
+
+                    <input asp-for="Nombre"
+                           class="form-control" />
+
+                    <span asp-validation-for="Nombre"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Nombre de usuario
+                    </label>
+
+                    <input asp-for="NombreUsuario"
+                           class="form-control" />
+
+                    <span asp-validation-for="NombreUsuario"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Correo electrónico
+                    </label>
+
+                    <input asp-for="Correo"
+                           class="form-control" />
+
+                    <span asp-validation-for="Correo"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Contraseña
+                    </label>
+
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control" />
+
+                    <span asp-validation-for="Password"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Rol
+                    </label>
+
+
+                    <select asp-for="RolId"
+                            asp-items="ViewBag.Roles"
+                            class="form-select">
+
+                        <option value="">
+                            Seleccione un rol
+                        </option>
+
+                    </select>
+
+
+                    <span asp-validation-for="RolId"
+                          class="text-danger">
+                    </span>
+
+
+                </div>
+
+
+
+
+                <div class="form-check mb-3">
+
+                    <input asp-for="Activo"
+                           class="form-check-input" />
+
+                    <label class="form-check-label">
+                        Usuario activo
+                    </label>
+
+                </div>
+
+
+
+
+                <button type="submit"
+                        class="btn btn-success">
+                    Guardar
+                </button>
+
+
+                <a asp-action="Index"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+</div>

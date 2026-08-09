@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Verificación de Código";
+}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+
+                    <h2 class="fw-bold text-center">
+                        Verificación de Seguridad
+                    </h2>
+
+                    <p class="text-center text-muted">
+                        Se envió un código de verificación al correo:
+                    </p>
+
+                    <h5 class="text-center text-primary">
+                        @ViewBag.Correo
+                    </h5>
+
+                    <form asp-action="VerificarCodigo" method="post">
+
+                        <div class="mb-3 mt-4">
+
+                            <label class="form-label">
+                                Código de verificación
+                            </label>
+
+                            <input type="text"
+                                   name="codigo"
+                                   class="form-control text-center"
+                                   maxlength="6"
+                                   placeholder="Ingrese el código recibido"
+                                   required />
+
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-success w-100">
+
+                            Verificar código
+
+                        </button>
+
+                    </form>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger mt-3">
+                            @ViewBag.Error
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

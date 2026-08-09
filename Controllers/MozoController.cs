@@ -16,14 +16,18 @@ namespace SrChauferoMVC_AzureIA.Controllers
         public IActionResult Index()
         {
             var auth = RequireMozo();
-            if (auth is not EmptyResult) return auth;
+
+            if (auth is not EmptyResult)
+                return auth;
+
 
             var pedidos = _db.Pedidos
                 .Include(p => p.Detalles)
                 .OrderByDescending(p => p.Fecha)
                 .ToList();
 
-            return View(pedidos);
+
+            return View("~/Views/Pedidos/Index.cshtml", pedidos);
         }
 
         public IActionResult Detalle(int id)

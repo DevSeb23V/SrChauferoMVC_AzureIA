@@ -1,7 +1,13 @@
 body {
     background: #fff8ed;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    overflow-x: hidden;
 }
+
+
+/* ==========================
+   HERO
+========================== */
 
 .hero,
 .admin-hero {
@@ -17,11 +23,25 @@ body {
         font-weight: 800;
     }
 
+
+
+/* ==========================
+   CARDS
+========================== */
+
 .card {
     border: 0;
     border-radius: 20px;
     box-shadow: 0 12px 28px #7a29001f;
+    max-width: 100%;
+    overflow: hidden;
 }
+
+
+
+/* ==========================
+   DASHBOARD
+========================== */
 
 .stat,
 .power-card {
@@ -32,15 +52,18 @@ body {
     box-shadow: 0 12px 25px rgba(0,0,0,.08);
 }
 
+
     .power-card span {
         color: #6c757d;
         font-weight: 600;
     }
 
+
     .power-card h2 {
         font-size: 32px;
         margin-top: 8px;
     }
+
 
 .power-mini {
     padding: 18px;
@@ -49,20 +72,55 @@ body {
     font-size: 18px;
 }
 
+
+
+/* ==========================
+   BOTONES
+========================== */
+
+
 .btn-primary {
     background: #d35400;
     border: 0;
 }
 
+
     .btn-primary:hover {
         background: #a04000;
     }
 
+
+button,
+.btn {
+    max-width: 100%;
+}
+
+
+
+/* ==========================
+   PLATOS
+========================== */
+
+
 .food-img {
+    width: 100%;
     height: 170px;
     object-fit: cover;
     border-radius: 18px;
 }
+
+
+.badge-soft {
+    background: #fff0c2;
+    color: #6b3500;
+}
+
+
+
+/* ==========================
+   LOGIN
+========================== */
+
 
 .login-wrap {
     min-height: 100vh;
@@ -70,6 +128,7 @@ body {
     display: flex;
     align-items: center;
 }
+
 
 .login-card {
     max-width: 430px;
@@ -80,21 +139,25 @@ body {
     box-shadow: 0 22px 60px #0005;
 }
 
-.badge-soft {
-    background: #fff0c2;
-    color: #6b3500;
-}
+
+
+/* ==========================
+   COCINA
+========================== */
+
 
 .pedido-cocina-card {
     min-height: 380px;
     max-height: 520px;
     border-radius: 18px;
-    animation: aparecerPedido 0.35s ease-in-out;
+    animation: aparecerPedido .35s ease-in-out;
 }
+
 
     .pedido-cocina-card .card-body {
         min-height: 380px;
     }
+
 
 .pedido-platos-scroll {
     overflow-y: auto;
@@ -102,14 +165,23 @@ body {
     padding-right: 4px;
 }
 
+
 .pedido-plato-nombre {
     word-break: break-word;
 }
 
+
 .pedido-cocina-card:hover {
     transform: translateY(-4px);
-    transition: 0.2s ease-in-out;
+    transition: .2s ease-in-out;
 }
+
+
+
+/* ==========================
+   IA CHAT
+========================== */
+
 
 .ia-boton {
     position: fixed;
@@ -129,6 +201,7 @@ body {
     z-index: 9999;
 }
 
+
 .ia-chat {
     position: fixed;
     right: 25px;
@@ -144,6 +217,7 @@ body {
     z-index: 9999;
 }
 
+
 .ia-header {
     background: #0d6efd;
     color: white;
@@ -152,12 +226,14 @@ body {
     justify-content: space-between;
 }
 
+
     .ia-header button {
         border: none;
         background: transparent;
         color: white;
         font-size: 22px;
     }
+
 
 .ia-mensajes {
     flex: 1;
@@ -166,6 +242,7 @@ body {
     background: #f8f9fa;
 }
 
+
 .ia-msg {
     padding: 10px;
     border-radius: 12px;
@@ -173,10 +250,12 @@ body {
     max-width: 85%;
 }
 
+
     .ia-msg.bot {
         background: white;
         border: 1px solid #dee2e6;
     }
+
 
     .ia-msg.user {
         background: #0d6efd;
@@ -184,11 +263,13 @@ body {
         margin-left: auto;
     }
 
+
 .ia-input {
     display: flex;
     padding: 10px;
     border-top: 1px solid #dee2e6;
 }
+
 
     .ia-input input {
         flex: 1;
@@ -196,6 +277,7 @@ body {
         border-radius: 10px;
         padding: 8px;
     }
+
 
     .ia-input button {
         margin-left: 8px;
@@ -206,7 +288,58 @@ body {
         padding: 8px 12px;
     }
 
+
+
+/* ==========================
+   SWITCH DISPONIBLE
+========================== */
+
+
+.form-switch .form-check-input {
+    width: 3.6rem;
+    height: 1.8rem;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: .25s;
+}
+
+
+    .form-switch .form-check-input:checked {
+        background-color: #198754;
+        border-color: #198754;
+    }
+
+
+    .form-switch .form-check-input:not(:checked) {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+
+
+/* ==========================
+   TABLAS
+========================== */
+
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+
+.table {
+    white-space: nowrap;
+}
+
+
+
+/* ==========================
+   ANIMACION
+========================== */
+
+
 @keyframes aparecerPedido {
+
     from {
         opacity: 0;
         transform: translateY(18px);
@@ -216,4 +349,298 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+
+
+/* ==========================
+   RESPONSIVE TABLET
+========================== */
+
+
+@media(max-width:768px) {
+
+
+    .hero,
+    .admin-hero {
+        padding: 25px;
+        border-radius: 20px;
+    }
+
+
+        .admin-hero h1 {
+            font-size: 28px;
+        }
+
+
+    .power-card h2 {
+        font-size: 24px;
+    }
+
+
+    .card {
+        padding: 18px !important;
+    }
+
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+
+    h4 {
+        font-size: 1.2rem;
+    }
+
+
+    .sticky-top {
+        position: relative !important;
+        top: auto !important;
+    }
+
+
+    canvas {
+        max-width: 100%;
+        height: auto !important;
+    }
+}
+
+
+
+/* ==========================
+   RESPONSIVE CELULAR
+========================== */
+
+
+@media(max-width:576px) {
+
+
+    .food-img {
+        height: 150px;
+    }
+
+
+    .login-card {
+        width: 90%;
+        padding: 25px;
+    }
+
+
+    .ia-chat {
+        width: 95%;
+        right: 2.5%;
+        height: 70vh;
+    }
+
+
+    .ia-boton {
+        width: 55px;
+        height: 55px;
+        right: 15px;
+        bottom: 15px;
+    }
+
+
+    .btn-lg {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+
+    .table {
+        font-size: .85rem;
+    }
+
+
+    .form-control,
+    .form-select {
+        font-size: 16px;
+    }
+
+
+    main.container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+
+    .navbar-text {
+        display: none;
+    }
+}
+
+/* ======================================
+   DASHBOARD RESPONSIVE
+====================================== */
+
+
+.dashboard-hero h1 {
+    font-size: 42px;
+}
+
+    
+.dashboard-card {
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.chart-card {
+    min-height: 380px;
+}
+
+
+
+.chart-container {
+    position: relative;
+    height: 280px;
+}
+
+
+
+
+
+@media(max-width:768px) {
+
+
+    .dashboard-hero {
+        padding: 25px;
+        border-radius: 20px;
+    }
+
+
+
+        .dashboard-hero h1 {
+            font-size: 28px;
+        }
+
+
+
+    .dashboard-card h2 {
+        font-size: 25px;
+    }
+
+
+
+    .chart-card {
+        min-height: 330px;
+    }
+
+
+
+    .chart-container {
+        height: 240px;
+    }
+}
+
+
+
+
+@media(max-width:576px) {
+
+
+
+    .dashboard-card {
+        text-align: center;
+    }
+
+
+
+    .chart-container {
+        height: 220px;
+    }
+
+
+
+    .table {
+        font-size: .8rem;
+    }
+}
+
+/* =====================================
+   USUARIOS RESPONSIVE
+===================================== */
+
+
+.table-responsive {
+    width: 100%;
+}
+
+
+
+@media(max-width:768px) {
+
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+
+
+    .table {
+        font-size: .85rem;
+    }
+}
+
+
+
+@media(max-width:576px) {
+
+
+    .table thead {
+        display: none;
+    }
+
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+
+
+        .table tr {
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 10px;
+            background: white;
+        }
+
+
+
+        .table td {
+            text-align: right;
+            padding-left: 50%;
+            position: relative;
+            border: none;
+        }
+
+
+
+        .table td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+            color: #6c757d;
+            text-align: left;
+        }
+
+
+
+        .table td:last-child {
+            text-align: center;
+            padding-left: 10px;
+        }
 }

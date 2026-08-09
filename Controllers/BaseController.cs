@@ -46,6 +46,7 @@ namespace SrChauferoMVC_AzureIA.Controllers
 
         protected IActionResult RequireRole(params string[] roles)
         {
+
             var auth = RequireLogin();
 
             if (auth is not EmptyResult)
@@ -79,6 +80,15 @@ namespace SrChauferoMVC_AzureIA.Controllers
         protected IActionResult RequireCliente()
         {
             return RequireRole("Cliente", "Administrador");
+        }
+        protected IActionResult RequireIA()
+        {
+            return RequireRole(
+                "Administrador",
+                "Cliente",
+                "Mozo",
+                "Cocinero"
+            );
         }
     }
 }

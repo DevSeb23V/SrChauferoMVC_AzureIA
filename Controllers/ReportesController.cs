@@ -20,16 +20,36 @@ namespace SrChauferoMVC_AzureIA.Controllers
             var pedidos = _db.Pedidos.AsQueryable();
 
             if (filtro == "hoy")
-                pedidos = pedidos.Where(p => p.Fecha.Date == DateTime.Today);
+            {
+                var inicio = DateTime.Today;
+                var fin = inicio.AddDays(1);
+
+                pedidos = pedidos.Where(p =>
+                    p.Fecha >= inicio &&
+                    p.Fecha < fin);
+            }
 
             if (filtro == "semana")
-                pedidos = pedidos.Where(p => p.Fecha >= DateTime.Today.AddDays(-7));
+            {
+                pedidos = pedidos.Where(p =>
+                    p.Fecha >= DateTime.Today.AddDays(-7));
+            }
 
             if (filtro == "mes")
-                pedidos = pedidos.Where(p => p.Fecha >= DateTime.Today.AddMonths(-1));
+            {
+                pedidos = pedidos.Where(p =>
+                    p.Fecha >= DateTime.Today.AddMonths(-1));
+            }
 
-            if (filtro == "fecha" && fecha != null)
-                pedidos = pedidos.Where(p => p.Fecha.Date == fecha.Value.Date);
+            if (filtro == "fecha" && fecha.HasValue)
+            {
+                var inicio = fecha.Value.Date;
+                var fin = inicio.AddDays(1);
+
+                pedidos = pedidos.Where(p =>
+                    p.Fecha >= inicio &&
+                    p.Fecha < fin);
+            }
 
             var lista = pedidos
                 .OrderByDescending(p => p.Fecha)
@@ -40,6 +60,7 @@ namespace SrChauferoMVC_AzureIA.Controllers
             ViewBag.PromedioVenta = lista.Any() ? lista.Average(x => x.Total) : 0;
             ViewBag.QR = lista.Count(x => x.MetodoPago == "QR");
             ViewBag.Efectivo = lista.Count(x => x.MetodoPago == "Efectivo");
+
             ViewBag.Filtro = filtro;
             ViewBag.Fecha = fecha?.ToString("yyyy-MM-dd");
 
